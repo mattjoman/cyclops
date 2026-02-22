@@ -73,6 +73,12 @@ void calc_ratios(double results[], uint64_t numerators[],
                                    int size)
 {
     for (int i = 0; i < size; i++) {
+
+        if (denominators[i] == 0) {
+            results[i] = 0.0;
+            continue;
+        }
+
         results[i] = numerators[i] / (1.0 * denominators[i]);
     }
 }

@@ -49,9 +49,9 @@ static void print_ratio_table_row(ratio_metric_t metric)
     char median_buf[32];
 
     snprintf(name_buf, sizeof(name_buf), "%s", ratio_confs[metric.id].name);
-    snprintf(min_buf, sizeof(min_buf), "%.2f", metric.agg.min);
-    snprintf(max_buf, sizeof(max_buf), "%.2f", metric.agg.max);
-    snprintf(median_buf, sizeof(median_buf), "%.2f", metric.agg.median);
+    snprintf(min_buf, sizeof(min_buf), "%.6f", metric.agg.min);
+    snprintf(max_buf, sizeof(max_buf), "%.6f", metric.agg.max);
+    snprintf(median_buf, sizeof(median_buf), "%.6f", metric.agg.median);
 
     print_table_cell_right_align(name_buf);
     print_table_cell_right_align(min_buf);
