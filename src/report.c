@@ -82,7 +82,7 @@ static void print_batch_info(batch_conf_t batch_conf)
     putchar('\n');
 }
 
-void run_report(batch_conf_t batch_conf, batch_data_t batch_data)
+void run_report(batch_conf_t batch_conf, batch_data_t *batch_data)
 {
     counter_metric_t ctr_metric;
     ratio_metric_t ratio_metric;
@@ -91,15 +91,15 @@ void run_report(batch_conf_t batch_conf, batch_data_t batch_data)
     print_batch_info(batch_conf);
     print_table_column_headers();
 
-    for (int i = 0; i < batch_data.n_counters; i++) {
+    for (int i = 0; i < batch_data->n_counters; i++) {
 
-        ctr_metric = batch_data.counters[i];
+        ctr_metric = batch_data->counters[i];
         print_counter_table_row(ctr_metric);
     }
 
-    for (int i = 0; i < batch_data.n_ratios; i++) {
+    for (int i = 0; i < batch_data->n_ratios; i++) {
 
-        ratio_metric = batch_data.ratios[i];
+        ratio_metric = batch_data->ratios[i];
         print_ratio_table_row(ratio_metric);
     }
 

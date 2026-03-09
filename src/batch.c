@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "../include/batch.h"
 #include "../include/bench.h"
@@ -129,17 +130,22 @@ static int process_batch_data(batch_conf_t batch_conf,
 
 void run_batch(batch_conf_t batch_conf)
 {
-    batch_data_t batch_data;
+    batch_data_t *batch_data;
     workload_t workload;
 
-    init_batch_data(&batch_data, batch_conf);
+    batch_data = (batch_data_t*)malloc(sizeof(batch_data_t));
+    assert(batch_data);
+
+    init_batch_data(batch_data, batch_conf);
     workload = *all_workloads[batch_conf.workload_id];
 
     workload.init();
-    bench_perf_event(batch_conf, &batch_data, workload.workload);
+    bench_perf_event(batch_conf, batch_data, workload.workload);
     workload.clean();
 
-    process_batch_data(batch_conf, &batch_data);
+    process_batch_data(batch_conf, batch_data);
 
     run_report(batch_conf, batch_data);
+
+    free(batch_data);
 }
