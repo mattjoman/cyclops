@@ -14,6 +14,10 @@ typedef struct batch_conf {
 
 typedef struct batch_data {
 
+    /* these two are always active for perf_event batches */
+    counter_metric_t time_enabled;
+    counter_metric_t time_running;
+
     int n_counters;
     counter_metric_t counters[MAX_ACTIVE_COUNTERS];
 

@@ -31,6 +31,8 @@ static int init_batch_data(batch_data_t *batch_data, batch_conf_t batch_conf)
     counter_metric_t counter;
     ratio_metric_t ratio;
 
+    memset(batch_data, 0, sizeof(batch_data_t));
+
     metric_grp = metric_grps[batch_conf.metric_grp_id];
 
     batch_data->n_counters = metric_grp.n_counters;
