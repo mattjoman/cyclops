@@ -236,11 +236,11 @@ static void store_perf_results(batch_data_t *batch_data,
             assert(perf_results[run].values[i].id == perf_ctr_ids[i]);
         }
 
-        perf_result_t perf_result = perf_results[run];
-        assert(perf_result.time_running == perf_result.time_enabled);
+        perf_result_t *perf_result = &perf_results[run];
+        assert(perf_result->time_running == perf_result->time_enabled);
 
-        for (unsigned int pr_idx = 0; pr_idx < perf_result.nr; pr_idx++) {
-            uint64_t value = perf_result.values[pr_idx].value;
+        for (unsigned int pr_idx = 0; pr_idx < perf_result->nr; pr_idx++) {
+            uint64_t value = perf_result->values[pr_idx].value;
             batch_data->counters[pr_idx].raw[run] = value;
         }
     }
