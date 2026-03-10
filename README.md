@@ -56,3 +56,16 @@ To improve measurement fidelity, the tool uses the following strategies:
 - **Per-run derived metrics:**
   Calculates ratios (e.g., IPC = instructions / cycles) per run before
   aggregation to avoid statistical distortion.
+
+## Project Roadmap
+
+### Milestone 1 - Reliable single-threaded benchmarking
+
+- single-threaded measurement accuracy & reliability
+- a simple cli tool allowing users to design benchmark experiments
+- a simple workload API so users can measure custom code
+
+### Milestone 2 - Multithreaded update
+
+- support multithreaded workloads
+- accurate per-thread metrics
