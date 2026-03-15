@@ -13,7 +13,7 @@ static const char help_text[] =
 "Options:\n\n"
 "  -h, --help                       Display this message\n"
 "  -w, --workload WORKLOAD          Select workload to benchmark\n"
-"  -m, --metric-group GROUP         Select a group of metrics to record\n"
+"  -g, --metric-group GROUP         Select a group of metrics to record\n"
 "\n";
 
 static void print_workload_guide(void)
@@ -68,13 +68,13 @@ int main(int argc, char *argv[])
     static struct option long_opts[] = {
         {"help",    required_argument, 0, 'h'},
         {"workload",    required_argument, 0, 'w'},
-        {"metric-grp", required_argument, 0, 'm'},
+        {"metric-grp", required_argument, 0, 'g'},
         {0, 0, 0, 0}
     };
 
     int opt;
 
-    while ((opt = getopt_long(argc, argv, "w:m:h", long_opts, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "w:g:h", long_opts, NULL)) != -1) {
         switch (opt) {
             case 'h':
                 fputs(help_text, stdout);
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
             case 'w':
                 workload_str = optarg;
                 break;
-            case 'm':
+            case 'g':
                 metric_grp_str = optarg;
                 break;
             default:
