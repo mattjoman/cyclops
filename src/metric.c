@@ -34,6 +34,8 @@ const char *counter_confs[N_COUNTER_METRICS] = {
     [COUNTER_TASK_CLOCK_NS]           = "TASK_CLOCK_NS",
     [COUNTER_ALIGNMENT_FAULTS]        = "ALIGNMENT_FAULTS",
 
+    [COUNTER_RDTSCP]                  = "RDTSCP",
+
 };
 
 const ratio_conf_t ratio_confs[N_RATIO_METRICS] = {
@@ -249,6 +251,18 @@ const metric_grp_t metric_grps[N_METRIC_GRPS] = {
         .counter_ids = {
             COUNTER_CPU_CYCLES,
             COUNTER_ALIGNMENT_FAULTS,
+        },
+        //.ratio_ids = {
+        //},
+    },
+
+    [METRIC_GRP_RDTSCP] = {
+        .id = METRIC_GRP_RDTSCP,
+        .name = "RDTSCP",
+        .n_counters = 1,
+        .n_ratios = 0,
+        .counter_ids = {
+            COUNTER_RDTSCP,
         },
         //.ratio_ids = {
         //},

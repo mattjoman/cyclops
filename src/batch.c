@@ -194,7 +194,13 @@ void run_batch(batch_conf_t batch_conf)
     workload_t workload = *all_workloads[batch_conf.workload_id];
 
     workload.init();
-    bench_perf_event(batch_conf, batch_data, workload.workload);
+
+    if (batch_conf.metric_grp_id == METRIC_GRP_RDTSCP) {
+        bench_rdtscp(batch_conf, batch_data, workload.workload);
+    } else {
+        bench_perf_event(batch_conf, batch_data, workload.workload);
+    }
+
     workload.clean();
 
     process_batch_data(batch_conf, batch_data);

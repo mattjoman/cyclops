@@ -249,13 +249,27 @@ static void store_perf_results(batch_data_t *batch_data,
  * This is just a placeholder for now.
  * Might make this function usable at some point.
  */
-uint64_t bench_rdtscp(void (*test_func)(void))
+int bench_rdtscp(batch_conf_t batch_conf, batch_data_t *batch_data,
+                                          void (*workload)(void))
 {
-    uint64_t start, end;
-    start = rdtscp();
-    test_func();
-    end = rdtscp();
-    return end - start;
+    uint64_t start, end, *raw_values;
+
+    raw_values = batch_data->counters[0].run_vals;
+
+    pin_thread();
+
+    for (int i = 0; i < batch_conf.warmup_runs; i++) {
+        workload();
+    }
+
+    for (int i = 0; i < batch_conf.batch_runs; i++) {
+        start = rdtscp();
+        workload();
+        end = rdtscp();
+        raw_values[i] = end - start;
+    }
+
+    return 0;
 }
 
 int bench_perf_event(batch_conf_t batch_conf, batch_data_t *batch_data,

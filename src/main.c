@@ -150,6 +150,9 @@ int main(int argc, char *argv[])
     } else if (strcmp(metric_grp_str, metric_grps[METRIC_GRP_ALIGNMENT_FAULTS].name) == 0) {
         metric_grp_id = METRIC_GRP_ALIGNMENT_FAULTS;
 
+    } else if (strcmp(metric_grp_str, metric_grps[METRIC_GRP_RDTSCP].name) == 0) {
+        metric_grp_id = METRIC_GRP_RDTSCP;
+
     }
 
     if (workload_id < 0 || metric_grp_id < 0) {
