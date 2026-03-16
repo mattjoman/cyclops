@@ -1,24 +1,28 @@
+#include <stdlib.h>
+
 #include "../include/workload.h"
 
-int contiguous_array[BIG_NUMBER_1];
+static const int array_size = 1000000;
+static int *contiguous_array;
 
 static void init(void)
 {
-    for (int i = 0; i < BIG_NUMBER_1; i++) {
+    contiguous_array = (int *)calloc(array_size, sizeof(int));
+    for (int i = 0; i < array_size; i++) {
         contiguous_array[i] = i;
     }
 }
 
 static void clean(void)
 {
-    return;
+    free(contiguous_array);
 }
 
 __attribute__((noinline))
 static void workload(void)
 {
     volatile int sum;
-    for (int i = 0; i < BIG_NUMBER_1; i++) {
+    for (int i = 0; i < array_size; i++) {
         sum += contiguous_array[i];
     }
 }

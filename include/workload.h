@@ -1,8 +1,6 @@
 #ifndef WORKLOAD_H
 #define WORKLOAD_H
 
-#define BIG_NUMBER_1 10000000
-
 enum {
     WL_CONTIGUOUS_ARRAY,
     WL_SCATTERED_ARRAY,

@@ -2,11 +2,13 @@
 
 #include "../include/workload.h"
 
-int *scattered_array[BIG_NUMBER_1];
+static const int array_size = 1000000;
+static int **scattered_array;
 
 static void init(void)
 {
-    for (int i = 0; i < BIG_NUMBER_1; i++) {
+    scattered_array = (int **)calloc(array_size, sizeof(int *));
+    for (int i = 0; i < array_size; i++) {
         scattered_array[i] = malloc(sizeof(int));
         *scattered_array[i] = i;
     }
@@ -14,9 +16,10 @@ static void init(void)
 
 static void clean(void)
 {
-    for (int i = 0; i < BIG_NUMBER_1; i++) {
+    for (int i = 0; i < array_size; i++) {
         free(scattered_array[i]);
     }
+    free(scattered_array);
 }
 
 __attribute__((noinline))
@@ -25,7 +28,7 @@ static void workload(void)
     volatile int sum;
 
     sum = 0;
-    for (int i = 0; i < BIG_NUMBER_1; i++) {
+    for (int i = 0; i < array_size; i++) {
         sum += *scattered_array[i];
     }
 }
