@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -36,7 +37,11 @@ static int cmp_double(const void *a, const void *b)
 uint64_agg_t aggregate_uint64(uint64_t array[], int size)
 {
     uint64_agg_t agg;
-    uint64_t array_cpy[MAX_BATCH_RUNS];
+    uint64_t *array_cpy = calloc(size, sizeof(uint64_t));
+    if (!array_cpy) {
+        perror("Failed to allocate array for uint64 aggregate calculations");
+        exit(1);
+    }
 
     memcpy(array_cpy, array, size * sizeof(uint64_t));
 
@@ -48,13 +53,18 @@ uint64_agg_t aggregate_uint64(uint64_t array[], int size)
     agg.max = array_cpy[size - 1];
     agg.median = array_cpy[(size - 1) / 2]; // lower median
 
+    free(array_cpy);
     return agg;
 }
 
 double_agg_t aggregate_double(double array[], int size)
 {
     double_agg_t agg;
-    double array_cpy[MAX_BATCH_RUNS];
+    double *array_cpy = calloc(size, sizeof(double));
+    if (!array_cpy) {
+        perror("Failed to allocate array for double aggregate calculations");
+        exit(1);
+    }
 
     memcpy(array_cpy, array, size * sizeof(double));
 
@@ -66,6 +76,7 @@ double_agg_t aggregate_double(double array[], int size)
     agg.max = array_cpy[size - 1];
     agg.median = array_cpy[(size - 1) / 2]; // lower median
 
+    free(array_cpy);
     return agg;
 }
 

@@ -14,8 +14,13 @@ int init_batch_conf(batch_conf_t *batch_conf, int warmup_runs,
                                                             int workload_id,
                                                             metric_grp_id_t id)
 {
-    if (batch_runs < 1 || batch_runs > MAX_BATCH_RUNS)
-        return -1;
+    if (batch_runs < 1 || batch_runs > MAX_BATCH_RUNS) {
+        batch_runs = 100;
+    }
+
+    if (warmup_runs < 1 ) {
+        warmup_runs = 5;
+    }
 
     batch_conf->warmup_runs   = warmup_runs;
     batch_conf->batch_runs    = batch_runs;
@@ -33,6 +38,8 @@ static batch_data_t *init_batch_data(batch_conf_t batch_conf)
     uint64_t *uint64_ptr;
     double *double_ptr;
 
+    int batch_runs = batch_conf.batch_runs;
+
     batch_data_t *batch_data = calloc(1, sizeof(batch_data_t));
 
     metric_grp = metric_grps[batch_conf.metric_grp_id];
@@ -40,14 +47,14 @@ static batch_data_t *init_batch_data(batch_conf_t batch_conf)
     batch_data->n_counters = metric_grp.n_counters;
     batch_data->n_ratios = metric_grp.n_ratios;
 
-    if ((uint64_ptr = calloc(MAX_BATCH_RUNS, sizeof(uint64_t))) == 0) {
+    if ((uint64_ptr = calloc(batch_runs, sizeof(uint64_t))) == 0) {
         perror("Failed to allocate array");
         exit(1);
     } else {
         batch_data->time_enabled.run_vals = uint64_ptr;
     }
 
-    if ((uint64_ptr = calloc(MAX_BATCH_RUNS, sizeof(uint64_t))) == 0) {
+    if ((uint64_ptr = calloc(batch_runs, sizeof(uint64_t))) == 0) {
         perror("Failed to allocate array");
         exit(1);
     } else {
@@ -60,7 +67,7 @@ static batch_data_t *init_batch_data(batch_conf_t batch_conf)
 
     for (int i = 0; i < metric_grp.n_counters; i++) {
         counter.id = metric_grp.counter_ids[i];
-        if ((uint64_ptr = calloc(MAX_BATCH_RUNS, sizeof(uint64_t))) == 0) {
+        if ((uint64_ptr = calloc(batch_runs, sizeof(uint64_t))) == 0) {
             perror("Failed to allocate array");
             exit(1);
         } else {
@@ -72,7 +79,7 @@ static batch_data_t *init_batch_data(batch_conf_t batch_conf)
 
     for (int i = 0; i < metric_grp.n_ratios; i++) {
         ratio.id = metric_grp.ratio_ids[i];
-        if ((double_ptr = calloc(MAX_BATCH_RUNS, sizeof(double_ptr))) == 0) {
+        if ((double_ptr = calloc(batch_runs, sizeof(double))) == 0) {
             perror("Failed to allocate array");
             exit(1);
         } else {

@@ -267,7 +267,12 @@ int bench_perf_event(batch_conf_t batch_conf, batch_data_t *batch_data,
 
     int n_counters = metric_grps[batch_conf.metric_grp_id].n_counters;
 
-    perf_result_t perf_results[MAX_BATCH_RUNS];
+    perf_result_t *perf_results = calloc(batch_conf.batch_runs,
+                                                        sizeof(perf_result_t));
+    if (!perf_results) {
+        perror("Failed to allocate buffer for perf results");
+        exit(1);
+    }
 
     for (int i = 0; i < n_counters; i++) {
 
@@ -323,6 +328,7 @@ int bench_perf_event(batch_conf_t batch_conf, batch_data_t *batch_data,
 
     store_perf_results(batch_data, perf_results, perf_ctr_ids, n_counters,
                                                         batch_conf.batch_runs);
+    free(perf_results);
 
     return 0;
 }

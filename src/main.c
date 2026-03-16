@@ -14,6 +14,8 @@ static const char help_text[] =
 "  -h, --help                       Display this message\n"
 "  -w, --workload WORKLOAD          Select workload to benchmark\n"
 "  -g, --metric-group GROUP         Select a group of metrics to record\n"
+"  -r, --batch-runs RUNS            Number of runs in the batch\n"
+"  -u, --warmup-runs RUNS           Number of warmup runs\n"
 "\n";
 
 static void print_workload_guide(void)
@@ -64,17 +66,21 @@ int main(int argc, char *argv[])
 
     char *workload_str = NULL;
     char *metric_grp_str  = NULL;
+    int batch_runs = 0;
+    int warmup_runs = 0;
 
     static struct option long_opts[] = {
         {"help",    required_argument, 0, 'h'},
         {"workload",    required_argument, 0, 'w'},
         {"metric-grp", required_argument, 0, 'g'},
+        {"batch-runs", required_argument, 0, 'r'},
+        {"warmup-runs", required_argument, 0, 'u'},
         {0, 0, 0, 0}
     };
 
     int opt;
 
-    while ((opt = getopt_long(argc, argv, "w:g:h", long_opts, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "w:g:h:r:u:", long_opts, NULL)) != -1) {
         switch (opt) {
             case 'h':
                 fputs(help_text, stdout);
@@ -86,6 +92,12 @@ int main(int argc, char *argv[])
                 break;
             case 'g':
                 metric_grp_str = optarg;
+                break;
+            case 'r':
+                batch_runs = atoi(optarg);
+                break;
+            case 'u':
+                warmup_runs = atoi(optarg);
                 break;
             default:
                 fprintf(stderr, "Usage 1\n");
@@ -144,8 +156,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    int warmup_runs = 5;
-    int batch_runs = MAX_BATCH_RUNS;
+    //int warmup_runs = 5;
+    //int batch_runs = MAX_BATCH_RUNS;
 
     batch_conf_t batch_conf;
     init_batch_conf(&batch_conf, warmup_runs, batch_runs, workload_id,
