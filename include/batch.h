@@ -45,6 +45,6 @@ int init_batch_conf(batch_conf_t *batch_conf, int warmup_runs,
                                               int workload_id,
                                               metric_grp_id_t id);
 
-void run_batch(batch_conf_t batch_conf);
+void run_batch(batch_conf_t batch_conf, wl_arg_slice_t *wl_args);
 
 #endif

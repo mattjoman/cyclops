@@ -5,7 +5,7 @@
 static const int array_size = 1000;
 static int *contiguous_array;
 
-static void init(void)
+static void init(wl_arg_slice_t *wl_args)
 {
     contiguous_array = (int *)calloc(array_size, sizeof(int));
     for (int i = 0; i < array_size; i++) {

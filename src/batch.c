@@ -187,12 +187,12 @@ static int process_batch_data(batch_conf_t batch_conf,
     return 0;
 }
 
-void run_batch(batch_conf_t batch_conf)
+void run_batch(batch_conf_t batch_conf, wl_arg_slice_t *wl_args)
 {
     batch_data_t *batch_data = (batch_data_t*)init_batch_data(batch_conf);
     workload_t *workload = all_workloads[batch_conf.workload_id];
 
-    workload->init();
+    workload->init(wl_args);
 
     if (batch_conf.metric_grp_id == METRIC_GRP_RDTSCP) {
         bench_rdtscp(batch_conf, batch_data, workload->workload);
