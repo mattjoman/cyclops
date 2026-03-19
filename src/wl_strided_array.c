@@ -7,10 +7,10 @@ static int array_elements;
 
 static int *array;
 
-static void init(wl_arg_slice_t *wl_args)
+static void init(workload_t *wl, wl_arg_slice_t *wl_args)
 {
-    stride_bytes = get_wl_param_val(WL_STRIDED_ARRAY, wl_args, "stride-bytes");
-    array_elements = get_wl_param_val(WL_STRIDED_ARRAY, wl_args,
+    stride_bytes = get_wl_param_val(wl, wl_args, "stride-bytes");
+    array_elements = get_wl_param_val(wl, wl_args,
                                                             "array-elements");
     array = (int *)aligned_alloc(stride_bytes, stride_bytes * array_elements);
     for (int i = 0; i < array_elements; i++) {
@@ -43,8 +43,7 @@ static const wl_param_t params[] = {
     },
 };
 
-workload_t wl_strided_array = {
-    .id = WL_STRIDED_ARRAY,
+static workload_t wl = {
     .name = "STRIDED_ARRAY",
 
     .n_params = 2,
@@ -54,3 +53,8 @@ workload_t wl_strided_array = {
     .clean = clean,
     .workload = workload,
 };
+
+static void __attribute__((constructor)) register_wl(void)
+{
+    register_workload(&wl);
+}

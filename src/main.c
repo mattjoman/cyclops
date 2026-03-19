@@ -18,16 +18,6 @@ static const char help_text[] =
 "  -u, --warmup-runs RUNS           Number of warmup runs\n"
 "\n";
 
-static void print_workload_guide(void)
-{
-    printf("Workloads:\n\n");
-
-    for (int i = 0; i < N_WORKLOADS; i++) {
-        printf("  %s\n", all_workloads[i]->name);
-    }
-    printf("\n");
-}
-
 static void print_metric_grp_guide(void)
 {
     metric_grp_t metric_grp;
@@ -59,16 +49,6 @@ static void print_metric_grp_guide(void)
         }
         printf("\n\n");
     }
-}
-
-int get_workload_id_from_name(const char *name)
-{
-    for (int i = 0; i < N_WORKLOADS; i++) {
-        if (strcmp(name, all_workloads[i]->name) == 0) {
-            return i;
-        }
-    }
-    return -1;
 }
 
 int get_metric_grp_id_from_name(const char *name)
@@ -149,17 +129,16 @@ int main(int argc, char *argv[])
         }
     }
 
-    int workload_id = get_workload_id_from_name(workload_str);
+    workload_t *wl = get_workload_by_name(workload_str);
     int metric_grp_id = get_metric_grp_id_from_name(metric_grp_str);
 
-    if (workload_id < 0 || metric_grp_id < 0) {
+    if (!wl || metric_grp_id < 0) {
         fprintf(stderr, "Usage 2\n");
         return 1;
     }
 
     batch_conf_t batch_conf;
-    init_batch_conf(&batch_conf, warmup_runs, batch_runs, workload_id,
-                                                          metric_grp_id);
+    init_batch_conf(&batch_conf, warmup_runs, batch_runs, wl, metric_grp_id);
     run_batch(batch_conf, &wl_args);
 
     return 0;

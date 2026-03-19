@@ -10,9 +10,9 @@
 #include "../include/report.h"
 
 int init_batch_conf(batch_conf_t *batch_conf, int warmup_runs,
-                                                            int batch_runs,
-                                                            int workload_id,
-                                                            metric_grp_id_t id)
+                                              int batch_runs,
+                                              workload_t *wl,
+                                              metric_grp_id_t id)
 {
     if (batch_runs < 1 || batch_runs > MAX_BATCH_RUNS) {
         batch_runs = 100;
@@ -24,7 +24,7 @@ int init_batch_conf(batch_conf_t *batch_conf, int warmup_runs,
 
     batch_conf->warmup_runs   = warmup_runs;
     batch_conf->batch_runs    = batch_runs;
-    batch_conf->workload_id   = workload_id;
+    batch_conf->wl            = wl;
     batch_conf->metric_grp_id = id;
 
     return 0;
@@ -190,17 +190,17 @@ static int process_batch_data(batch_conf_t batch_conf,
 void run_batch(batch_conf_t batch_conf, wl_arg_slice_t *wl_args)
 {
     batch_data_t *batch_data = (batch_data_t*)init_batch_data(batch_conf);
-    workload_t *workload = all_workloads[batch_conf.workload_id];
+    workload_t *wl = batch_conf.wl;
 
-    workload->init(wl_args);
+    wl->init(wl, wl_args);
 
     if (batch_conf.metric_grp_id == METRIC_GRP_RDTSCP) {
-        bench_rdtscp(batch_conf, batch_data, workload->workload);
+        bench_rdtscp(batch_conf, batch_data, wl->workload);
     } else {
-        bench_perf_event(batch_conf, batch_data, workload->workload);
+        bench_perf_event(batch_conf, batch_data, wl->workload);
     }
 
-    workload->clean();
+    wl->clean();
 
     process_batch_data(batch_conf, batch_data);
     run_report(batch_conf, batch_data);

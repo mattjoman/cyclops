@@ -1,13 +1,6 @@
 #ifndef WORKLOAD_H
 #define WORKLOAD_H
 
-enum {
-    WL_CONTIGUOUS_ARRAY,
-    WL_SCATTERED_ARRAY,
-    WL_STRIDED_ARRAY,
-    N_WORKLOADS,
-};
-
 #define MAX_WL_PARAMS 5
 
 typedef struct {
@@ -25,24 +18,24 @@ typedef struct {
     const char *default_value;
 } wl_param_t;
 
+typedef struct workload workload_t;
 typedef struct workload {
-    int id;
     const char* name;
 
     const int n_params;
     const wl_param_t *params;
 
-    void (*init)(wl_arg_slice_t *wl_args);
+    void (*init)(workload_t *wl, wl_arg_slice_t *wl_args);
     void (*clean)(void);
     void (*workload)(void);
 } workload_t;
 
-extern workload_t *all_workloads[N_WORKLOADS];
+void register_workload(workload_t *wl);
 
-extern workload_t wl_contiguous_array;
-extern workload_t wl_scattered_array;
-extern workload_t wl_strided_array;
+void print_workload_guide(void);
 
-int get_wl_param_val(int wl_id, wl_arg_slice_t *wl_args, const char *key);
+workload_t *get_workload_by_name(const char *name);
+
+int get_wl_param_val(workload_t *wl, wl_arg_slice_t *wl_args, const char *key);
 
 #endif
