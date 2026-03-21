@@ -61,17 +61,21 @@ int get_metric_grp_id_from_name(const char *name)
     return -1;
 }
 
+#define MAX_WL_ARGS 5
+
 int main(int argc, char *argv[])
 {
-
     char *workload_str = NULL;
     char *metric_grp_str  = NULL;
     int batch_runs = 0;
     int warmup_runs = 0;
+    int n_wl_params = 0;
+    char *wl_param_keys[MAX_WL_ARGS];
+    char *wl_param_args[MAX_WL_ARGS];
 
     static struct option long_opts[] = {
-        {"help",    no_argument, 0, 'h'},
-        {"workload",    required_argument, 0, 'w'},
+        {"help", no_argument, 0, 'h'},
+        {"workload", required_argument, 0, 'w'},
         {"metric-grp", required_argument, 0, 'g'},
         {"batch-runs", required_argument, 0, 'r'},
         {"warmup-runs", required_argument, 0, 'u'},
@@ -80,7 +84,8 @@ int main(int argc, char *argv[])
     };
 
     int opt;
-
+    char *key;
+    char *eq;
     while ((opt = getopt_long(argc, argv, "hw:g:r:u:p:", long_opts, NULL)) != -1) {
         switch (opt) {
             case 'h':
@@ -101,6 +106,22 @@ int main(int argc, char *argv[])
                 warmup_runs = atoi(optarg);
                 break;
             case 'p':
+                if (n_wl_params >= MAX_WL_ARGS) {
+                    fprintf(stderr, "Too many workload param args\n");
+                    return 1;
+                }
+
+                key = optarg;
+                eq = strchr(key, '=');
+
+                if (!eq) {
+                    fprintf(stderr, "Invalid param format: %s\n", key);
+                    return 1;
+                }
+                *eq = '\0'; // split into two strings
+                wl_param_keys[n_wl_params] = key;
+                wl_param_args[n_wl_params] = eq + 1;
+                n_wl_params++;
                 break;
             default:
                 fprintf(stderr, "Usage 1\n");
@@ -111,31 +132,13 @@ int main(int argc, char *argv[])
     workload_t *wl = get_workload_by_name(workload_str);
     int metric_grp_id = get_metric_grp_id_from_name(metric_grp_str);
 
-    char *arg;
-    char *eq;
-    while ((opt = getopt_long(argc, argv, "p:", long_opts, NULL)) != -1) {
-        switch (opt) {
-            case 'p':
-                arg = optarg;
-                eq = strchr(arg, '=');
-
-                if (!eq) {
-                    fprintf(stderr, "Invalid param format: %s\n", arg);
-                    return 1;
-                }
-
-                *eq = '\0'; // split into two strings
-
-                wl_set_param(wl, arg, eq + 1);
-                break;
-            default:
-                break;
-        }
-    }
-
     if (!wl || metric_grp_id < 0) {
         fprintf(stderr, "Usage 2\n");
         return 1;
+    }
+
+    for (int i = 0; i < n_wl_params; i++) {
+        wl_set_param(wl, wl_param_keys[i], wl_param_args[i]);
     }
 
     batch_conf_t batch_conf;

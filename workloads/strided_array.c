@@ -2,8 +2,8 @@
 
 #include "../include/workload.h"
 
-static int stride_bytes;
-static int array_elements;
+unsigned long long stride_bytes;
+unsigned long long array_elements;
 
 static int *array;
 
@@ -13,7 +13,7 @@ static void init(workload_t *wl)
     array_elements = wl_get_param(wl, "array-elements");
 
     array = (int *)aligned_alloc(stride_bytes, stride_bytes * array_elements);
-    for (int i = 0; i < array_elements; i++) {
+    for (unsigned long long i = 0; i < array_elements; i++) {
         array[i * (stride_bytes / sizeof(int))] = i;
     }
 }
@@ -25,8 +25,8 @@ static void clean(void)
 
 __attribute__((noinline)) static void workload(void)
 {
-    volatile int sum = 0;
-    for (int i = 0; i < array_elements; i++) {
+    volatile unsigned long long sum = 0;
+    for (unsigned long long i = 0; i < array_elements; i++) {
         sum += array[i * (stride_bytes / sizeof(int))];
     }
 }

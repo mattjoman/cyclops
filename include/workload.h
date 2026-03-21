@@ -30,7 +30,7 @@ void print_workload_guide(void);
 
 workload_t *get_workload_by_name(const char *name);
 
-int wl_get_param(workload_t *wl, const char *key);
+unsigned long long wl_get_param(workload_t *wl, const char *key);
 void wl_set_param(workload_t *wl, const char *key, const char *arg);
 
 #endif

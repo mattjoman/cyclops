@@ -39,14 +39,14 @@ workload_t *get_workload_by_name(const char *name)
  * If no arg is provided for this param by the user (with --param key=value),
  * use the param's default value.
  */
-int wl_get_param(workload_t *wl, const char *key)
+unsigned long long wl_get_param(workload_t *wl, const char *key)
 {
     for (int i = 0; i < wl->n_params; i++) {
         if (strcmp(wl->params[i].key, key) == 0) {
             if (wl->params[i].arg) {
-                return atoi(wl->params[i].arg);
+                return strtoull(wl->params[i].arg, NULL, 10);
             }
-            return atoi(wl->params[i].default_value);
+            return strtoull(wl->params[i].default_value, NULL, 10);
         };
     }
 
