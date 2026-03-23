@@ -101,31 +101,37 @@ static void process_perf_counter_data(batch_conf_t batch_conf,
     }
 }
 
-static void process_perf_ratio_data(batch_conf_t batch_cfg,
+static void process_perf_ratio_data(batch_conf_t cfg,
                                     batch_data_t *batch_data)
 {
-    double_agg_t agg;
-    uint64_t *numerators, *denominators;
-    metric_id_t numerator_id, denominator_id;
-
     for (int i = 0; i < batch_data->n_perf_ratios; i++) {
 
-        denominator_id = batch_data->perf_ratios[i].metric->denominator_id;
-        numerator_id = batch_data->perf_ratios[i].metric->numerator_id;
+        perf_ratio_data_t *ratio = &batch_data->perf_ratios[i];
 
-        numerators = denominators = NULL;
+        uint64_t *numerators = NULL;
+        uint64_t *denominators = NULL;
 
+        /*
+         * Find the numerator and denominator counters needed to calculate the
+         * ratio.
+         *
+         * TODO: switch to index array lookup
+         */
         for (int j = 0; j < batch_data->n_perf_counters; j++) {
-            if (batch_data->perf_counters[j].metric->id == numerator_id) {
-                numerators = batch_data->perf_counters[j].run_vals;
+            if (numerators && denominators) {
                 break;
             }
-        }
 
-        for (int j = 0; j < batch_data->n_perf_counters; j++) {
-            if (batch_data->perf_counters[j].metric->id == denominator_id) {
-                denominators = batch_data->perf_counters[j].run_vals;
-                break;
+            perf_counter_data_t *counter = &batch_data->perf_counters[j];
+
+            metric_id_t counter_mid = counter->metric->id;
+            metric_id_t ratio_numerator_mid = ratio->metric->numerator_id;
+            metric_id_t ratio_denominator_mid = ratio->metric->denominator_id;
+
+            if (counter_mid == ratio_numerator_mid) {
+                numerators = counter->run_vals;
+            } else if (counter_mid == ratio_denominator_mid) {
+                denominators = counter->run_vals;
             }
         }
 
@@ -137,11 +143,9 @@ static void process_perf_ratio_data(batch_conf_t batch_cfg,
         calc_ratios(batch_data->perf_ratios[i].run_vals,
                     numerators,
                     denominators,
-                    batch_cfg.batch_runs);
+                    cfg.batch_runs);
 
-        agg = aggregate_double(batch_data->perf_ratios[i].run_vals,
-                                                        batch_cfg.batch_runs);
-        batch_data->perf_ratios[i].agg = agg;
+        ratio->agg = aggregate_double(ratio->run_vals, cfg.batch_runs);
     }
 }
 
