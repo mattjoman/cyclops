@@ -14,9 +14,14 @@ typedef struct batch_conf {
 } batch_conf_t;
 
 typedef struct {
-    const metric_t *metric;
     uint64_t *run_vals;
     uint64_agg_t agg;
+} perf_time_data_t;
+
+typedef struct {
+    const metric_t *metric;
+    double *run_vals;
+    double_agg_t agg;
 } perf_counter_data_t;
 
 typedef struct {
@@ -35,8 +40,8 @@ typedef struct {
 typedef struct batch_data {
 
     /* these two are always active for perf batches */
-    perf_counter_data_t time_enabled;
-    perf_counter_data_t time_running;
+    perf_time_data_t time_enabled;
+    perf_time_data_t time_running;
 
     int n_perf_counters;
     perf_counter_data_t *perf_counters;

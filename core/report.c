@@ -30,9 +30,9 @@ static void print_perf_counter_table_row(perf_counter_data_t data)
     char median_buf[32];
 
     snprintf(name_buf, sizeof(name_buf), "%s", data.metric->name);
-    snprintf(min_buf, sizeof(min_buf), "%ld", data.agg.min);
-    snprintf(max_buf, sizeof(max_buf), "%ld", data.agg.max);
-    snprintf(median_buf, sizeof(median_buf), "%ld", data.agg.median);
+    snprintf(min_buf, sizeof(min_buf), "%.6f", data.agg.min);
+    snprintf(max_buf, sizeof(max_buf), "%.6f", data.agg.max);
+    snprintf(median_buf, sizeof(median_buf), "%.6f", data.agg.median);
 
     print_table_cell_right_align(name_buf);
     print_table_cell_right_align(min_buf);
@@ -131,7 +131,7 @@ void timer_batch_to_csv(batch_conf_t batch_conf, batch_data_t *batch_data)
     fprintf(file, "%s,\n", batch_data->timer.metric->name);
 
     for (unsigned long long r = 0; r < batch_conf.batch_runs; r++) {
-        fprintf(file, "%ld\n", batch_data->timer.run_vals[r]);
+        fprintf(file, "%ld,\n", batch_data->timer.run_vals[r]);
     }
 
     fclose(file);
@@ -165,7 +165,7 @@ void perf_batch_to_csv(batch_conf_t batch_conf, batch_data_t *batch_data)
         fprintf(file, "%ld,", batch_data->time_running.run_vals[i]);
 
         for (int m = 0; m < batch_data->n_perf_counters; m++) {
-            fprintf(file, "%ld,", batch_data->perf_counters[m].run_vals[i]);
+            fprintf(file, "%.6f,", batch_data->perf_counters[m].run_vals[i]);
         }
 
         for (int m = 0; m < batch_data->n_perf_ratios; m++) {

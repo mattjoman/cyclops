@@ -50,7 +50,7 @@ static batch_data_t *init_perf_batch_data(batch_conf_t batch_cfg)
     }
 
     for (int i = 0; i < data->n_perf_counters; i++) {
-        data->perf_counters[i].run_vals = alloc_uint64_array(
+        data->perf_counters[i].run_vals = alloc_double_array(
                                                         batch_cfg.batch_runs);
         data->perf_counters[i].metric = counter_metric_buff[i];
     }
@@ -91,11 +91,11 @@ static void destroy_perf_batch_data(batch_data_t *batch_data)
 static void process_perf_counter_data(batch_conf_t batch_conf,
                                       batch_data_t *batch_data)
 {
-    uint64_agg_t agg;
+    double_agg_t agg;
     int batch_runs = batch_conf.batch_runs;
 
     for (int i = 0; i < batch_data->n_perf_counters; i++) {
-        agg = aggregate_uint64(batch_data->perf_counters[i].run_vals,
+        agg = aggregate_double(batch_data->perf_counters[i].run_vals,
                                                                 batch_runs);
         batch_data->perf_counters[i].agg = agg;
     }
@@ -108,8 +108,8 @@ static void process_perf_ratio_data(batch_conf_t cfg,
 
         perf_ratio_data_t *ratio = &batch_data->perf_ratios[i];
 
-        uint64_t *numerators = NULL;
-        uint64_t *denominators = NULL;
+        double *numerators = NULL;
+        double *denominators = NULL;
 
         /*
          * Find the numerator and denominator counters needed to calculate the

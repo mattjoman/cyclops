@@ -231,15 +231,17 @@ static void store_perf_results(batch_data_t *batch_data,
             assert(perf_end_results[run].values[i].id == perf_ctr_ids[i]);
         }
 
-        perf_result_t *perf_result = calc_run_delta(&perf_start_results[run],
+        perf_result_t *pr = calc_run_delta(&perf_start_results[run],
                                                   &perf_end_results[run],
                                                   batch_data->n_perf_counters);
 
-        batch_data->time_enabled.run_vals[run] = perf_result->time_enabled;
-        batch_data->time_running.run_vals[run] = perf_result->time_running;
+        batch_data->time_enabled.run_vals[run] = pr->time_enabled;
+        batch_data->time_running.run_vals[run] = pr->time_running;
 
-        for (unsigned int pr_idx = 0; pr_idx < perf_result->nr; pr_idx++) {
-            uint64_t value = perf_result->values[pr_idx].value;
+        double scaling = (double)pr->time_enabled / pr->time_running;
+
+        for (unsigned int pr_idx = 0; pr_idx < pr->nr; pr_idx++) {
+            double value = scaling * pr->values[pr_idx].value;
             batch_data->perf_counters[pr_idx].run_vals[run] = value;
         }
     }

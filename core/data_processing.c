@@ -80,11 +80,11 @@ double_agg_t aggregate_double(double array[], unsigned long long size)
     return agg;
 }
 
-void calc_ratios(double results[], const uint64_t numerators[],
-                                   const uint64_t denominators[],
+void calc_ratios(double results[], const double numerators[],
+                                   const double denominators[],
                                    unsigned long long size)
 {
     for (unsigned long long i = 0; i < size; i++) {
-        results[i] = (double)numerators[i] / denominators[i];
+        results[i] = numerators[i] / denominators[i];
     }
 }
