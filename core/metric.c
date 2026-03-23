@@ -222,13 +222,13 @@ const metric_grp_t metric_grps[N_METRIC_GRPS] = {
             &metrics[METRIC_INSTRUCTIONS],
             &metrics[METRIC_LLC_READ_ACCESSES],
             &metrics[METRIC_LLC_READ_MISSES],
-            &metrics[METRIC_BRANCH_INSTRUCTIONS],
-            &metrics[METRIC_BRANCH_MISPREDICTIONS],
-            &metrics[METRIC_DTLB_READ_ACCESSES],
-            &metrics[METRIC_DTLB_READ_MISSES],
+            &metrics[METRIC_L1D_READ_ACCESSES],
+            &metrics[METRIC_L1D_READ_MISSES],
 
             &metrics[METRIC_INSTRUCTIONS_PER_CYCLE],
             &metrics[METRIC_CYCLES_PER_INSTRUCTION],
+            &metrics[METRIC_LLC_READ_MISS_RATE],
+            &metrics[METRIC_L1D_READ_MISS_RATE],
         },
     },
 
