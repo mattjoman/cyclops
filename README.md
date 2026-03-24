@@ -1,61 +1,108 @@
-# Microbench
+# Cyclops
 
-A low-overhead microbenchmarking tool for Linux build directly on top of
-`perf_event_open()`.
+A minimal microbenchmarking tool for Linux build directly on top of
+`perf_event_open()` and timers like `rdtscp`.
 
 ## Motivation
 
-Modern performance engineering requires understanding how high-level code maps
-to low-level hardware behavior.
-I built **Microbench** to:
+I built **cyclops** because I wanted a small, accurate microbenchmarking
+framework for measuring C code.
 
-- Develop intuition for how design decisions affect CPU performance
-- Learn how to diagnose bottlenecks using hardware performance counters
-- Explore the challenges of accurate microbenchmarking
-- Understand the tradeoffs between measurement accuracy and measurement
-  overhead
+## Build and Run
 
-While tools like perf are powerful, they are general-purpose.
-I wanted a minimal tool tailored specifically for controlled, repeatable
-microbenchmarks.
+```bash
+# clone repository
+git clone https://mattjoman/cyclops.git cyclops
 
-## Microbenchmarking Challenges
+# enter repository
+cd cyclops
 
-Microbenchmarking on modern CPUs is deceptively difficult due to:
+# build
+make
 
-- Counter multiplexing when too many events are measured simultaneously
-- Scheduler noise and thread migration
-- Cold instruction/data caches
-- Branch predictor state
-- Measurement overhead influencing results
-- Variance across runs due to microarchitectural state
+# run
+./cyclops -w STRIDED_ARRAY -g IPC -p array-elements=1000
+```
 
-Microbench was designed to explicitly address these issues.
+## Benchmarking
 
-## Approach
+The following methods are used to maximise benchmark accuracy and minimise
+measurement noise:
 
-To improve measurement fidelity, the tool uses the following strategies:
+- Pin thread to a single core
+- Warmup runs to train branch predictors and warm caches (set from the cli)
+- Barriers & serialization to ensure the compiler or CPU don't reorder
+  workload instructions outside the measurement window
+- Detect kernel multiplexing physical PMU counters with `time_running` and
+  `time_enabled`, and scale results if necessary (for `perf_event_open()`)
 
-- **Limited counter group size (max 3 events):**
-  Prevents kernel multiplexing and avoids scaled counter results.
+See the benchmarking code in `core/bench/perf_bench.c` and
+`core/timer_bench.c`.
 
-- **Thread pinning:**
-  Pins the benchmarking thread to a single core to eliminate migration noise.
+## Workloads
 
-- **Warmup runs:**
-  Warms instruction/data caches and branch predictors before measurement.
+**Cyclops** provides a simple workload API, making it easy to create custom
+workloads or experiment with one of the default workloads.
 
-- **Precise counter scoping**
-  Enables the counter group immediately before the workload and disables it
-  immediately after to minimize measurement pollution.
+Workloads can be fully scriptable from the command line using custom workload
+parameters.
 
-- **Result buffering:**
-  Defers processing and aggregation to avoid perturbing the microarchitectural
-  state of subsequent runs.
+To create a custom workload, you must make a workload C file in `/workloads`.
+This C file will need to contain the following things:
 
-- **Per-run derived metrics:**
-  Calculates ratios (e.g., IPC = instructions / cycles) per run before
-  aggregation to avoid statistical distortion.
+- `#include "../include/workload.h"`
+- declare a `static workload_t` struct
+- define the following functions
+    - `init()` - initialises workload state
+    - `workload()` - the workload to benchmark
+    - `clean()` - clean up any dynamically allocated state
+- optionally declare a parameter array (so you can script the workload from the
+  command line)
+- register the workload with the `REGISTER_WORKLOAD()` macro
+
+For examples see `/include/workload.h` and the default workloads in
+`/workloads`.
+
+## Metrics
+
+See the default metric groups (declared in `/core/metric.c`) or with the
+output of `cyclops -h`.
+
+You can only benchmark with one metric group, so select one that contains the
+metrics you want (or create a custom group).
+
+### Metric Group Types
+
+There are two kinds of metric group:
+
+- **PERF** groups (metrics calculated using `perf_event_open()`)
+- **TIMER** group (metrics calculated using `rdtscp`)
+
+### Metric Types
+
+- raw perf event metrics
+- perf event derived metrics (e.g. instructions per cycle)
+- timer - `rdtscp` measurements
+
+## Ouput
+
+### CSV File
+
+**Cyclops** outputs batch data to a CSV file called `data.csv`.
+This contains data for each metric in the metric group, for each run.
+
+It also contains metadata at the top of the file (lines starting with '#') so
+you can recreate the batch.
+
+For **PERF** metric groups, the CSV file will contain the `time_enabled` and
+`time_running` values for the perf counter group for each run (see
+documentation for `perf_event_open()` for more).
+If kernel multiplexing occurred, the raw metrics will be scaled using
+`time_enabled` and `time_running`.
+
+### Batch Summary (`stdout`)
+
+Aggregate values and metadata for the batch will be written to `stdout`.
 
 ## Project Roadmap
 

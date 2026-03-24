@@ -8,7 +8,7 @@
 #include "../include/metric.h"
 
 static const char help_text[] =
-"Usage: ./microbench [OPTIONS]\n"
+"Usage: ./cyclops [OPTIONS]\n"
 "\n"
 "Options:\n\n"
 "  -h, --help                       Display this message\n"

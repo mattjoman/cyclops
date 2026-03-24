@@ -28,7 +28,7 @@ SRCS := $(CORE_SRCS) $(WORKLOAD_SRCS)
 OBJS=$(SRCS:.c=.o)
 
 # Output binary
-OUT=out
+OUT=cyclops
 
 # Default target
 all: $(OUT)
