@@ -210,7 +210,7 @@ const metric_t metrics[N_METRICS] = {
     },
 };
 
-const metric_grp_t metric_grps[N_METRIC_GRPS] = {
+const metric_grp_t metric_grps[] = {
 
     {
         .name = "TEST",
@@ -380,6 +380,8 @@ const metric_grp_t metric_grps[N_METRIC_GRPS] = {
         },
     },
 
+    { 0 }, // end of mg array
+
 };
 
 const metric_grp_t *get_mg_by_name(const char *name)
@@ -388,10 +390,12 @@ const metric_grp_t *get_mg_by_name(const char *name)
         return NULL;
     }
 
-    for (int i = 0; i < N_METRIC_GRPS; i++) {
-        if (strcmp(name, metric_grps[i].name) == 0) {
-            return &metric_grps[i];
+    const metric_grp_t *mg = &metric_grps[0];
+    while (mg->name) {
+        if (strcmp(name, mg->name) == 0) {
+            return mg;
         }
+        mg++;
     }
 
     fprintf(stderr, "No metric group with name '%s'\n", name);
@@ -416,16 +420,14 @@ void mg_list_metrics_by_type(const metric_grp_t *mg,
 
 void print_metric_grp_guide(void)
 {
-    metric_grp_t metric_grp;
-
     printf("Metric groups:\n\n");
 
-    for (int i = 0; i < N_METRIC_GRPS; i++) {
-        metric_grp = metric_grps[i];
-        printf("  %s:\n", metric_grp.name);
+    const metric_grp_t *mg = &metric_grps[0];
+    while (mg->name) {
+        printf("  %s:\n", mg->name);
 
-        if (metric_grp.type == METRIC_GRP_TYPE_TIMER) {
-            printf("    Raw:  %s\n\n", metric_grp.metrics[0]->name);
+        if (mg->type == METRIC_GRP_TYPE_TIMER) {
+            printf("    Raw:  %s\n\n", mg->metrics[0]->name);
             continue;
         }
 
@@ -434,9 +436,9 @@ void print_metric_grp_guide(void)
         const metric_t *counter_metric_buff[MAX_PERF_COUNTERS];
         const metric_t *ratio_metric_buff[MAX_PERF_RATIOS];
 
-        mg_list_metrics_by_type(&metric_grp, METRIC_TYPE_PERF_COUNTER,
+        mg_list_metrics_by_type(mg, METRIC_TYPE_PERF_COUNTER,
             MAX_PERF_COUNTERS, counter_metric_buff, &n_perf_counters);
-        mg_list_metrics_by_type(&metric_grp, METRIC_TYPE_PERF_RATIO,
+        mg_list_metrics_by_type(mg, METRIC_TYPE_PERF_RATIO,
                 MAX_PERF_RATIOS, ratio_metric_buff, &n_perf_ratios);
 
         printf("    Raw:  ");
@@ -450,5 +452,7 @@ void print_metric_grp_guide(void)
             printf("%s  ", ratio_metric_buff[j]->name);
         }
         printf("\n\n");
+
+        mg++;
     }
 }

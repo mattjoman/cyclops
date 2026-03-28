@@ -83,24 +83,6 @@ typedef struct metric_grp {
     const metric_t *const *metrics;
 } metric_grp_t;
 
-enum {
-    METRIC_GRP_TEST,
-    METRIC_GRP_IPC,
-    METRIC_GRP_LLC_READS,
-    METRIC_GRP_L1D_READS,
-    METRIC_GRP_L1I_READS,
-    METRIC_GRP_DTLB_READS,
-    METRIC_GRP_ITLB_READS,
-    METRIC_GRP_BPU_READS,
-    METRIC_GRP_BRANCH,
-    METRIC_GRP_STALLED_CYCLES,
-    METRIC_GRP_PAGE_FAULTS,
-    METRIC_GRP_ALIGNMENT_FAULTS,
-    METRIC_GRP_TIMER,
-
-    N_METRIC_GRPS,
-};
-
 const metric_grp_t *get_mg_by_name(const char *name);
 void mg_list_metrics_by_type(const metric_grp_t *mg,
                              int type,
