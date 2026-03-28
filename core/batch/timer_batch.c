@@ -35,12 +35,10 @@ static void destroy_timer_batch_data(batch_data_t *batch_data)
 }
 
 static void process_timer_batch(batch_conf_t *cfg,
-                         batch_data_t *batch_data)
+                                batch_data_t *batch_data)
 {
-    uint64_agg_t agg;
-    agg = aggregate_uint64(batch_data->timer.run_vals, cfg->batch_runs);
-
-    batch_data->timer.agg = agg;
+    batch_data->timer.agg = aggregate_uint64(batch_data->timer.run_vals,
+                                             cfg->batch_runs);
 }
 
 void run_timer_batch(batch_conf_t *cfg)
