@@ -31,15 +31,7 @@ typedef struct {
 } perf_ratio_data_t;
 
 typedef struct {
-    const metric_t *metric;
-    uint64_t *run_vals;
-    uint64_agg_t agg;
-} timer_data_t;
 
-// TODO: split into perf_batch_data and timer_batch_data
-typedef struct batch_data {
-
-    /* these two are always active for perf batches */
     perf_time_data_t time_enabled;
     perf_time_data_t time_running;
 
@@ -48,9 +40,17 @@ typedef struct batch_data {
 
     int n_perf_ratios;
     perf_ratio_data_t *perf_ratios;
+} perf_batch_t;
 
+typedef struct {
+    const metric_t *metric;
+    uint64_t *run_vals;
+    uint64_agg_t agg;
+} timer_data_t;
+
+typedef struct {
     timer_data_t timer;
-} batch_data_t;
+} timer_batch_t;
 
 void run_batch(unsigned long long warmup_runs,
                unsigned long long batch_runs,

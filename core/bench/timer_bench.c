@@ -27,7 +27,7 @@ static uint64_t rdtscp()
  * This is just a placeholder for now.
  * Might make this function usable at some point.
  */
-int bench_timer(batch_conf_t *batch_cfg, batch_data_t *batch_data,
+int bench_timer(batch_conf_t *batch_cfg, timer_batch_t *batch_data,
                                          void (*workload)(void))
 {
     uint64_t start, end;

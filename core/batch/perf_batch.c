@@ -11,11 +11,11 @@
 
 #include "./internal.h"
 
-static batch_data_t *init_perf_batch_data(batch_conf_t *cfg)
+static perf_batch_t *init_perf_batch_data(batch_conf_t *cfg)
 {
-    batch_data_t *data;
-    if (!(data = calloc(1, sizeof(batch_data_t)))) {
-        perror("Failed to allocate memory for batch_data_t struct");
+    perf_batch_t *data;
+    if (!(data = calloc(1, sizeof(perf_batch_t)))) {
+        perror("Failed to allocate memory for perf_batch_t struct");
         exit(1);
     }
 
@@ -62,7 +62,7 @@ static batch_data_t *init_perf_batch_data(batch_conf_t *cfg)
     return data;
 }
 
-static void destroy_perf_batch_data(batch_data_t *batch_data)
+static void destroy_perf_batch_data(perf_batch_t *batch_data)
 {
     free(batch_data->time_enabled.run_vals);
     batch_data->time_enabled.run_vals = NULL;
@@ -87,7 +87,7 @@ static void destroy_perf_batch_data(batch_data_t *batch_data)
 }
 
 static void process_perf_counter_data(batch_conf_t *cfg,
-                                      batch_data_t *batch_data)
+                                      perf_batch_t *batch_data)
 {
     double_agg_t agg;
     int batch_runs = cfg->batch_runs;
@@ -100,7 +100,7 @@ static void process_perf_counter_data(batch_conf_t *cfg,
 }
 
 static void process_perf_ratio_data(batch_conf_t *cfg,
-                                    batch_data_t *batch_data)
+                                    perf_batch_t *batch_data)
 {
     for (int i = 0; i < batch_data->n_perf_ratios; i++) {
 
@@ -150,7 +150,7 @@ static void process_perf_ratio_data(batch_conf_t *cfg,
 void run_perf_batch(batch_conf_t *cfg)
 {
 
-    batch_data_t *batch_data;
+    perf_batch_t *batch_data;
     workload_t *wl = cfg->wl;
 
     batch_data = init_perf_batch_data(cfg);

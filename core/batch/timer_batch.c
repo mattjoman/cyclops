@@ -11,9 +11,9 @@
 
 #include "./internal.h"
 
-static batch_data_t *init_timer_batch_data(batch_conf_t *cfg)
+static timer_batch_t *init_timer_batch_data(batch_conf_t *cfg)
 {
-    batch_data_t *data = calloc(1, sizeof(batch_data_t));
+    timer_batch_t *data = calloc(1, sizeof(timer_batch_t));
     if (!data) {
         perror("Failed to allocate memory for batch data struct");
         exit(1);
@@ -25,7 +25,7 @@ static batch_data_t *init_timer_batch_data(batch_conf_t *cfg)
     return data;
 }
 
-static void destroy_timer_batch_data(batch_data_t *batch_data)
+static void destroy_timer_batch_data(timer_batch_t *batch_data)
 {
     free(batch_data->timer.run_vals);
     batch_data->timer.run_vals = NULL;
@@ -35,7 +35,7 @@ static void destroy_timer_batch_data(batch_data_t *batch_data)
 }
 
 static void process_timer_batch(batch_conf_t *cfg,
-                                batch_data_t *batch_data)
+                                timer_batch_t *batch_data)
 {
     batch_data->timer.agg = aggregate_uint64(batch_data->timer.run_vals,
                                              cfg->batch_runs);
@@ -45,7 +45,7 @@ void run_timer_batch(batch_conf_t *cfg)
 {
 
     workload_t *wl = cfg->wl;
-    batch_data_t *batch_data = init_timer_batch_data(cfg);
+    timer_batch_t *batch_data = init_timer_batch_data(cfg);
 
     // TODO: move this to a function in the bench subsystem
     wl->init(wl);

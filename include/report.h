@@ -3,8 +3,8 @@
 
 #include "./batch.h"
 
-void run_perf_report(batch_conf_t *cfg, batch_data_t *batch_data);
-void timer_batch_to_csv(batch_conf_t *cfg, batch_data_t *batch_data);
-void perf_batch_to_csv(batch_conf_t *cfg, batch_data_t *batch_data);
+void run_perf_report(batch_conf_t *cfg, perf_batch_t *batch_data);
+void timer_batch_to_csv(batch_conf_t *cfg, timer_batch_t *batch_data);
+void perf_batch_to_csv(batch_conf_t *cfg, perf_batch_t *batch_data);
 
 #endif

@@ -83,7 +83,7 @@ static void print_batch_info(batch_conf_t *cfg)
     putchar('\n');
 }
 
-void run_perf_report(batch_conf_t *cfg, batch_data_t *batch_data)
+void run_perf_report(batch_conf_t *cfg, perf_batch_t *batch_data)
 {
     printf("\n");
     print_batch_info(cfg);
@@ -118,7 +118,7 @@ static void write_batch_metadata(FILE *file, batch_conf_t *cfg)
     }
 }
 
-void timer_batch_to_csv(batch_conf_t *cfg, batch_data_t *batch_data)
+void timer_batch_to_csv(batch_conf_t *cfg, timer_batch_t *batch_data)
 {
     FILE *file = fopen("batch.csv", "w");
     if (!file) {
@@ -137,7 +137,7 @@ void timer_batch_to_csv(batch_conf_t *cfg, batch_data_t *batch_data)
     fclose(file);
 }
 
-void perf_batch_to_csv(batch_conf_t *cfg, batch_data_t *batch_data)
+void perf_batch_to_csv(batch_conf_t *cfg, perf_batch_t *batch_data)
 {
     FILE *file = fopen("batch.csv", "w");
     if (!file) {
