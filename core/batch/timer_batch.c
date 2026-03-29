@@ -54,7 +54,7 @@ void run_timer_batch(batch_conf_t *cfg)
     process_timer_batch(cfg, batch_data);
 
     timer_batch_to_csv(cfg, batch_data);
-    // TODO: implement run_timer_report(batch_conf, batch_data);
+    run_timer_report(cfg, batch_data);
 
     destroy_timer_batch_data(batch_data);
 }

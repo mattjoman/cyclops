@@ -4,6 +4,7 @@
 
 #include "../include/report.h"
 #include "../include/metric.h"
+#include "../include/data_processing.h"
 
 #define TABLE_COLUMN_WIDTH 18
 
@@ -22,17 +23,17 @@ static void print_table_cell_right_align(const char *text)
     printf("%s", cell_buf);
 }
 
-static void print_perf_counter_table_row(perf_counter_data_t data)
+static void print_uint64_agg_table_row(uint64_agg_t agg, const char *name)
 {
     char name_buf[32];
     char min_buf[32];
     char max_buf[32];
     char median_buf[32];
 
-    snprintf(name_buf, sizeof(name_buf), "%s", data.metric->name);
-    snprintf(min_buf, sizeof(min_buf), "%.6f", data.agg.min);
-    snprintf(max_buf, sizeof(max_buf), "%.6f", data.agg.max);
-    snprintf(median_buf, sizeof(median_buf), "%.6f", data.agg.median);
+    snprintf(name_buf, sizeof(name_buf), "%s", name);
+    snprintf(min_buf, sizeof(min_buf), "%ld", agg.min);
+    snprintf(max_buf, sizeof(max_buf), "%ld", agg.max);
+    snprintf(median_buf, sizeof(median_buf), "%ld", agg.median);
 
     print_table_cell_right_align(name_buf);
     print_table_cell_right_align(min_buf);
@@ -42,17 +43,17 @@ static void print_perf_counter_table_row(perf_counter_data_t data)
     printf("\n");
 }
 
-static void print_perf_ratio_table_row(perf_ratio_data_t data)
+static void print_double_agg_table_row(double_agg_t agg, const char *name)
 {
     char name_buf[32];
     char min_buf[32];
     char max_buf[32];
     char median_buf[32];
 
-    snprintf(name_buf, sizeof(name_buf), "%s", data.metric->name);
-    snprintf(min_buf, sizeof(min_buf), "%.6f", data.agg.min);
-    snprintf(max_buf, sizeof(max_buf), "%.6f", data.agg.max);
-    snprintf(median_buf, sizeof(median_buf), "%.6f", data.agg.median);
+    snprintf(name_buf, sizeof(name_buf), "%s", name);
+    snprintf(min_buf, sizeof(min_buf), "%.6f", agg.min);
+    snprintf(max_buf, sizeof(max_buf), "%.6f", agg.max);
+    snprintf(median_buf, sizeof(median_buf), "%.6f", agg.median);
 
     print_table_cell_right_align(name_buf);
     print_table_cell_right_align(min_buf);
@@ -90,12 +91,25 @@ void run_perf_report(batch_conf_t *cfg, perf_batch_t *batch_data)
     print_table_column_headers();
 
     for (int i = 0; i < batch_data->n_perf_counters; i++) {
-        print_perf_counter_table_row(batch_data->perf_counters[i]);
+        print_double_agg_table_row(batch_data->perf_counters[i].agg,
+                                   batch_data->perf_counters[i].metric->name);
     }
 
     for (int i = 0; i < batch_data->n_perf_ratios; i++) {
-        print_perf_ratio_table_row(batch_data->perf_ratios[i]);
+        print_double_agg_table_row(batch_data->perf_ratios[i].agg,
+                                   batch_data->perf_ratios[i].metric->name);
     }
+
+    printf("\n");
+}
+
+void run_timer_report(batch_conf_t *cfg, timer_batch_t *batch_data)
+{
+    printf("\n");
+    print_batch_info(cfg);
+    print_table_column_headers();
+
+    print_uint64_agg_table_row(batch_data->timer.agg, cfg->mg->name);
 
     printf("\n");
 }
