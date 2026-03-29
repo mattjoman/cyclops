@@ -5,6 +5,8 @@
 
 #include "./microbench.h"
 
+/*** PERF ***/
+
 typedef enum {
 
     /* counters */
@@ -35,6 +37,12 @@ typedef enum {
     METRIC_TASK_CLOCK_NS,
     METRIC_ALIGNMENT_FAULTS,
 
+    N_PERF_COUNTERS
+
+} perf_counter_id_t;
+
+typedef enum {
+
     /* ratios */
 
     METRIC_INSTRUCTIONS_PER_CYCLE,
@@ -48,23 +56,21 @@ typedef enum {
     METRIC_BRANCH_MISPRED_RATE,
     METRIC_FE_VS_BE_STALLS,
 
-    N_METRICS
+    N_PERF_RATIOS
 
-} metric_id_t; // TODO: metric_id_t => perf_sub_metric_id_t
+} perf_ratio_id_t;
 
-enum {
-    METRIC_TYPE_PERF_COUNTER,
-    METRIC_TYPE_PERF_RATIO,
-};
-
-// TODO: metric_t =>  perf_sub_metric_t
 typedef struct {
-    metric_id_t id;
+    perf_counter_id_t id;
     const char *name;
-    int type;
-    metric_id_t numerator_id;
-    metric_id_t denominator_id;
-} metric_t;
+} perf_counter_metric_t;
+
+typedef struct {
+    perf_ratio_id_t id;
+    const char *name;
+    perf_counter_id_t numerator_id;
+    perf_counter_id_t denominator_id;
+} perf_ratio_metric_t;
 
 /*** METRIC GROUPS ***/
 
@@ -82,8 +88,8 @@ typedef struct {
     int type;
 
     /* only populated for perf metric groups */
-    const metric_t *const *perf_counters;
-    const metric_t *const *perf_ratios;
+    const perf_counter_metric_t *const *perf_counters;
+    const perf_ratio_metric_t *const *perf_ratios;
 } metric_grp_t;
 
 const metric_grp_t *get_mg_by_name(const char *name);

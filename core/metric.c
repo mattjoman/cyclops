@@ -5,200 +5,167 @@
 #include "../include/metric.h"
 #include "../include/data_processing.h"
 
-const metric_t metrics[N_METRICS] = {
+const perf_counter_metric_t perf_counters[N_PERF_COUNTERS] = {
     [METRIC_CPU_CYCLES] = {
         .id = METRIC_CPU_CYCLES,
         .name = "CPU_CYCLES",
-        .type = METRIC_TYPE_PERF_COUNTER,
     },
     [METRIC_REF_CPU_CYCLES] = {
         .id = METRIC_REF_CPU_CYCLES,
         .name = "REF_CPU_CYCLES",
-        .type = METRIC_TYPE_PERF_COUNTER,
     },
     [METRIC_INSTRUCTIONS] = {
         .id = METRIC_INSTRUCTIONS,
         .name = "INSTRUCTIONS",
-        .type = METRIC_TYPE_PERF_COUNTER,
     },
     [METRIC_LLC_READ_ACCESSES] = {
         .id = METRIC_LLC_READ_ACCESSES,
         .name = "LLC_READ_ACCESSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
     },
     [METRIC_LLC_READ_MISSES] = {
         .id = METRIC_LLC_READ_MISSES,
-        "LLC_READ_MISSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "LLC_READ_MISSES",
     },
     [METRIC_L1D_READ_ACCESSES] = {
         .id = METRIC_L1D_READ_ACCESSES,
-        "L1D_READ_ACCESSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "L1D_READ_ACCESSES",
     },
     [METRIC_L1D_READ_MISSES] = {
         .id = METRIC_L1D_READ_MISSES,
-        "L1D_READ_MISSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "L1D_READ_MISSES",
     },
     [METRIC_L1I_READ_ACCESSES] = {
         .id = METRIC_L1I_READ_ACCESSES,
-        "L1I_READ_ACCESSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "L1I_READ_ACCESSES",
     },
     [METRIC_L1I_READ_MISSES] = {
         .id = METRIC_L1I_READ_MISSES,
-        "L1I_READ_MISSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "L1I_READ_MISSES",
     },
     [METRIC_DTLB_READ_ACCESSES] = {
         .id = METRIC_DTLB_READ_ACCESSES,
-        "DTLB_READ_ACCESSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "DTLB_READ_ACCESSES",
     },
     [METRIC_DTLB_READ_MISSES] = {
         .id = METRIC_DTLB_READ_MISSES,
-        "DTLB_READ_MISSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "DTLB_READ_MISSES",
     },
     [METRIC_ITLB_READ_ACCESSES] = {
         .id = METRIC_ITLB_READ_ACCESSES,
-        "ITLB_READ_ACCESSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "ITLB_READ_ACCESSES",
     },
     [METRIC_ITLB_READ_MISSES] = {
         .id = METRIC_ITLB_READ_MISSES,
-        "ITLB_READ_MISSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "ITLB_READ_MISSES",
     },
     [METRIC_BPU_READ_ACCESSES] = {
         .id = METRIC_BPU_READ_ACCESSES,
-        "BPU_READ_ACCESSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "BPU_READ_ACCESSES",
     },
     [METRIC_BPU_READ_MISSES] = {
         .id = METRIC_BPU_READ_MISSES,
-        "BPU_READ_MISSES",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "BPU_READ_MISSES",
     },
     [METRIC_BRANCH_INSTRUCTIONS] = {
         .id = METRIC_BRANCH_INSTRUCTIONS,
-        "BRANCH_INSTRUCTIONS",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "BRANCH_INSTRUCTIONS",
     },
     [METRIC_BRANCH_MISPREDICTIONS] = {
         .id = METRIC_BRANCH_MISPREDICTIONS,
-        "BRANCH_MISPREDICTIONS",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "BRANCH_MISPREDICTIONS",
     },
     [METRIC_STALLED_CYCLES_FRONTEND] = {
         .id = METRIC_STALLED_CYCLES_FRONTEND,
-        "STALLED_CYCLES_FRONTEND",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "STALLED_CYCLES_FRONTEND",
     },
     [METRIC_STALLED_CYCLES_BACKEND]  = {
         .id = METRIC_STALLED_CYCLES_BACKEND,
-        "STALLED_CYCLES_BACKEND",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "STALLED_CYCLES_BACKEND",
     },
     [METRIC_PAGE_FAULTS] = {
         .id = METRIC_PAGE_FAULTS,
-        "PAGE_FAULTS",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "PAGE_FAULTS",
     },
     [METRIC_PAGE_FAULTS_MAJ] = {
         .id = METRIC_PAGE_FAULTS_MAJ,
-        "PAGE_FAULTS_MAJ",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "PAGE_FAULTS_MAJ",
     },
     [METRIC_PAGE_FAULTS_MIN] = {
         .id = METRIC_PAGE_FAULTS_MIN,
-        "PAGE_FAULTS_MIN",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "PAGE_FAULTS_MIN",
     },
     [METRIC_CPU_CLOCK_NS] = {
         .id = METRIC_CPU_CLOCK_NS,
-        "CPU_CLOCK_NS",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "CPU_CLOCK_NS",
     },
     [METRIC_TASK_CLOCK_NS] = {
         .id = METRIC_TASK_CLOCK_NS,
-        "TASK_CLOCK_NS",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "TASK_CLOCK_NS",
     },
     [METRIC_ALIGNMENT_FAULTS] = {
         .id = METRIC_ALIGNMENT_FAULTS,
-        "ALIGNMENT_FAULTS",
-        .type = METRIC_TYPE_PERF_COUNTER,
+        .name = "ALIGNMENT_FAULTS",
     },
+};
 
+const perf_ratio_metric_t perf_ratios[N_PERF_RATIOS] = {
     [METRIC_INSTRUCTIONS_PER_CYCLE] = {
         .id = METRIC_INSTRUCTIONS_PER_CYCLE,
         .name = "IPC",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_INSTRUCTIONS,
         .denominator_id = METRIC_CPU_CYCLES,
     },
     [METRIC_CYCLES_PER_INSTRUCTION] = {
         .id = METRIC_CYCLES_PER_INSTRUCTION,
         .name = "CPI",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_CPU_CYCLES,
         .denominator_id = METRIC_INSTRUCTIONS,
     },
     [METRIC_LLC_READ_MISS_RATE] = {
         .id = METRIC_LLC_READ_MISS_RATE,
         .name = "LLC_READ_MISS_RATE",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_LLC_READ_MISSES,
         .denominator_id = METRIC_LLC_READ_ACCESSES,
     },
     [METRIC_L1D_READ_MISS_RATE] = {
         .id = METRIC_L1D_READ_MISS_RATE,
         .name = "L1D_READ_MISS_RATE",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_L1D_READ_MISSES,
         .denominator_id = METRIC_L1D_READ_ACCESSES,
     },
     [METRIC_L1I_READ_MISS_RATE] = {
         .id = METRIC_L1I_READ_MISS_RATE,
         .name = "L1I_READ_MISS_RATE",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_L1I_READ_MISSES,
         .denominator_id = METRIC_L1I_READ_ACCESSES,
     },
     [METRIC_DTLB_READ_MISS_RATE] = {
         .id = METRIC_DTLB_READ_MISS_RATE,
         .name = "DTLB_READ_MISS_RATE",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_DTLB_READ_MISSES,
         .denominator_id = METRIC_DTLB_READ_ACCESSES,
     },
     [METRIC_ITLB_READ_MISS_RATE] = {
         .id = METRIC_ITLB_READ_MISS_RATE,
         .name = "ITLB_READ_MISS_RATE",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_ITLB_READ_MISSES,
         .denominator_id = METRIC_ITLB_READ_ACCESSES,
     },
     [METRIC_BPU_READ_MISS_RATE] = {
         .id = METRIC_BPU_READ_MISS_RATE,
         .name = "BPU_READ_MISS_RATE",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_BPU_READ_MISSES,
         .denominator_id = METRIC_BPU_READ_ACCESSES,
     },
     [METRIC_BRANCH_MISPRED_RATE] = {
         .id = METRIC_BRANCH_MISPRED_RATE,
         .name = "BRANCH_MISPRED_RATE",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_BRANCH_MISPREDICTIONS,
         .denominator_id = METRIC_BRANCH_INSTRUCTIONS,
     },
     [METRIC_FE_VS_BE_STALLS] = {
         .id = METRIC_FE_VS_BE_STALLS,
         .name = "FE_VS_BE_STALLS",
-        .type = METRIC_TYPE_PERF_RATIO,
         .numerator_id = METRIC_STALLED_CYCLES_FRONTEND,
         .denominator_id = METRIC_STALLED_CYCLES_BACKEND,
     },
@@ -209,8 +176,8 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "TEST",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
             NULL,
         },
     },
@@ -218,21 +185,21 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "BIG",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_REF_CPU_CYCLES],
-            &metrics[METRIC_INSTRUCTIONS],
-            &metrics[METRIC_LLC_READ_ACCESSES],
-            &metrics[METRIC_LLC_READ_MISSES],
-            &metrics[METRIC_L1D_READ_ACCESSES],
-            &metrics[METRIC_L1D_READ_MISSES],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_REF_CPU_CYCLES],
+            &perf_counters[METRIC_INSTRUCTIONS],
+            &perf_counters[METRIC_LLC_READ_ACCESSES],
+            &perf_counters[METRIC_LLC_READ_MISSES],
+            &perf_counters[METRIC_L1D_READ_ACCESSES],
+            &perf_counters[METRIC_L1D_READ_MISSES],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_INSTRUCTIONS_PER_CYCLE],
-            &metrics[METRIC_CYCLES_PER_INSTRUCTION],
-            &metrics[METRIC_LLC_READ_MISS_RATE],
-            &metrics[METRIC_L1D_READ_MISS_RATE],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_INSTRUCTIONS_PER_CYCLE],
+            &perf_ratios[METRIC_CYCLES_PER_INSTRUCTION],
+            &perf_ratios[METRIC_LLC_READ_MISS_RATE],
+            &perf_ratios[METRIC_L1D_READ_MISS_RATE],
             NULL,
         },
     },
@@ -240,15 +207,15 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "IPC",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_REF_CPU_CYCLES],
-            &metrics[METRIC_INSTRUCTIONS],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_REF_CPU_CYCLES],
+            &perf_counters[METRIC_INSTRUCTIONS],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_INSTRUCTIONS_PER_CYCLE],
-            &metrics[METRIC_CYCLES_PER_INSTRUCTION],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_INSTRUCTIONS_PER_CYCLE],
+            &perf_ratios[METRIC_CYCLES_PER_INSTRUCTION],
             NULL,
         },
     },
@@ -256,14 +223,14 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "LLC_READS",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_LLC_READ_ACCESSES],
-            &metrics[METRIC_LLC_READ_MISSES],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_LLC_READ_ACCESSES],
+            &perf_counters[METRIC_LLC_READ_MISSES],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_LLC_READ_MISS_RATE],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_LLC_READ_MISS_RATE],
             NULL,
         },
     },
@@ -271,14 +238,14 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "L1D_READS",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_L1D_READ_ACCESSES],
-            &metrics[METRIC_L1D_READ_MISSES],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_L1D_READ_ACCESSES],
+            &perf_counters[METRIC_L1D_READ_MISSES],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_L1D_READ_MISS_RATE],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_L1D_READ_MISS_RATE],
             NULL,
         },
     },
@@ -286,14 +253,14 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "L1I_READS",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_L1I_READ_ACCESSES],
-            &metrics[METRIC_L1I_READ_MISSES],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_L1I_READ_ACCESSES],
+            &perf_counters[METRIC_L1I_READ_MISSES],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_L1I_READ_MISS_RATE],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_L1I_READ_MISS_RATE],
             NULL,
         },
     },
@@ -301,14 +268,14 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "DTLB_READS",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_DTLB_READ_ACCESSES],
-            &metrics[METRIC_DTLB_READ_MISSES],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_DTLB_READ_ACCESSES],
+            &perf_counters[METRIC_DTLB_READ_MISSES],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_DTLB_READ_MISS_RATE],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_DTLB_READ_MISS_RATE],
             NULL,
         },
     },
@@ -316,14 +283,14 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "ITLB_READS",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_ITLB_READ_ACCESSES],
-            &metrics[METRIC_ITLB_READ_MISSES],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_ITLB_READ_ACCESSES],
+            &perf_counters[METRIC_ITLB_READ_MISSES],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_ITLB_READ_MISS_RATE],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_ITLB_READ_MISS_RATE],
             NULL,
         },
     },
@@ -331,14 +298,14 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "BPU_READS",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_BPU_READ_ACCESSES],
-            &metrics[METRIC_BPU_READ_MISSES],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_BPU_READ_ACCESSES],
+            &perf_counters[METRIC_BPU_READ_MISSES],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_BPU_READ_MISS_RATE],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_BPU_READ_MISS_RATE],
             NULL,
         },
     },
@@ -346,14 +313,14 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "BRANCH",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_BRANCH_INSTRUCTIONS],
-            &metrics[METRIC_BRANCH_MISPREDICTIONS],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_BRANCH_INSTRUCTIONS],
+            &perf_counters[METRIC_BRANCH_MISPREDICTIONS],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_BRANCH_MISPRED_RATE],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_BRANCH_MISPRED_RATE],
             NULL,
         },
     },
@@ -361,14 +328,14 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "STALLED_CYCLES",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_STALLED_CYCLES_FRONTEND],
-            &metrics[METRIC_STALLED_CYCLES_BACKEND],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_STALLED_CYCLES_FRONTEND],
+            &perf_counters[METRIC_STALLED_CYCLES_BACKEND],
             NULL,
         },
-        .perf_ratios = (const metric_t *const[]){
-            &metrics[METRIC_FE_VS_BE_STALLS],
+        .perf_ratios = (const perf_ratio_metric_t *const[]){
+            &perf_ratios[METRIC_FE_VS_BE_STALLS],
             NULL,
         },
     },
@@ -376,10 +343,10 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "PAGE_FAULTS",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_PAGE_FAULTS],
-            &metrics[METRIC_PAGE_FAULTS_MAJ],
-            &metrics[METRIC_PAGE_FAULTS_MIN],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_PAGE_FAULTS],
+            &perf_counters[METRIC_PAGE_FAULTS_MAJ],
+            &perf_counters[METRIC_PAGE_FAULTS_MIN],
             NULL,
         },
     },
@@ -387,9 +354,9 @@ const metric_grp_t metric_grps[] = {
     {
         .name = "ALIGNMENT_FAULTS",
         .type = METRIC_GRP_TYPE_PERF,
-        .perf_counters = (const metric_t *const[]){
-            &metrics[METRIC_CPU_CYCLES],
-            &metrics[METRIC_ALIGNMENT_FAULTS],
+        .perf_counters = (const perf_counter_metric_t *const[]){
+            &perf_counters[METRIC_CPU_CYCLES],
+            &perf_counters[METRIC_ALIGNMENT_FAULTS],
             NULL,
         },
     },
@@ -406,7 +373,7 @@ const metric_grp_t metric_grps[] = {
 int mg_n_perf_counters(const metric_grp_t *mg)
 {
     int n = 0;
-    const metric_t **counter = mg->perf_counters;
+    const perf_counter_metric_t *const *counter = mg->perf_counters;
     while (counter && *counter) {
         n++;
         counter++;
@@ -417,7 +384,7 @@ int mg_n_perf_counters(const metric_grp_t *mg)
 int mg_n_perf_ratios(const metric_grp_t *mg)
 {
     int n = 0;
-    const metric_t **ratio = mg->perf_ratios;
+    const perf_ratio_metric_t *const *ratio = mg->perf_ratios;
     while (ratio && *ratio) {
         n++;
         ratio++;
@@ -458,7 +425,7 @@ void print_metric_grp_guide(void)
         }
 
         printf("    Raw:  ");
-        const metric_t **perf_counter = mg->perf_counters;
+        const perf_counter_metric_t *const *perf_counter = mg->perf_counters;
         while (perf_counter != NULL && *perf_counter != NULL) {
             printf("%s  ", (*perf_counter)->name);
             perf_counter++;
@@ -466,7 +433,7 @@ void print_metric_grp_guide(void)
         printf("\n");
 
         printf("    Derived:  ");
-        const metric_t **perf_ratio = mg->perf_ratios;
+        const perf_ratio_metric_t *const *perf_ratio = mg->perf_ratios;
         while (perf_ratio != NULL && *perf_ratio != NULL) {
             printf("%s  ", (*perf_ratio)->name);
             perf_ratio ++;

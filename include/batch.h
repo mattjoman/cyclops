@@ -19,13 +19,13 @@ typedef struct {
 } perf_time_data_t;
 
 typedef struct {
-    const metric_t *metric;
+    const perf_counter_metric_t *metric;
     double *run_vals;
     double_agg_t agg;
 } perf_counter_data_t;
 
 typedef struct {
-    const metric_t *metric;
+    const perf_ratio_metric_t *metric;
     double *run_vals;
     double_agg_t agg;
 } perf_ratio_data_t;

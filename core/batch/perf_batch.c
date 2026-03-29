@@ -118,9 +118,11 @@ static void process_perf_ratio_data(batch_conf_t *cfg,
 
             perf_counter_data_t *counter = &batch_data->perf_counters[j];
 
-            metric_id_t counter_mid = counter->metric->id;
-            metric_id_t ratio_numerator_mid = ratio->metric->numerator_id;
-            metric_id_t ratio_denominator_mid = ratio->metric->denominator_id;
+            perf_counter_id_t counter_mid = counter->metric->id;
+            perf_counter_id_t ratio_numerator_mid =
+                                                ratio->metric->numerator_id;
+            perf_counter_id_t ratio_denominator_mid =
+                                                ratio->metric->denominator_id;
 
             if (counter_mid == ratio_numerator_mid) {
                 numerators = counter->run_vals;
