@@ -361,11 +361,13 @@ const metric_grp_t metric_grps[] = {
         },
     },
 
+#if defined(__x86_64__) || defined(__amd64__)
     {
         .name = "RDTSCP",
         .id = MG_ID_RDTSCP,
         .type = MG_TYPE_TIMER,
     },
+#endif
 
     { 0 }, // end of mg array
 
@@ -417,7 +419,7 @@ void print_metric_grp_guide(void)
 
     const metric_grp_t *mg = &metric_grps[0];
     while (mg->name) {
-        printf("  %s:\n", mg->name);
+        printf("  %s\n", mg->name);
 
         if (mg->type != MG_TYPE_PERF) {
             printf("\n");
