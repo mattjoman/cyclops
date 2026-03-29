@@ -75,8 +75,8 @@ typedef struct {
 /*** METRIC GROUPS ***/
 
 enum {
-    METRIC_GRP_TYPE_PERF,
-    METRIC_GRP_TYPE_TIMER,
+    MG_TYPE_PERF,
+    MG_TYPE_TIMER,
 };
 
 // TODO: metric_grp_t => metric_t

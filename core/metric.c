@@ -175,7 +175,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "TEST",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             NULL,
@@ -184,7 +184,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "BIG",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_REF_CPU_CYCLES],
@@ -206,7 +206,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "IPC",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_REF_CPU_CYCLES],
@@ -222,7 +222,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "LLC_READS",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_LLC_READ_ACCESSES],
@@ -237,7 +237,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "L1D_READS",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_L1D_READ_ACCESSES],
@@ -252,7 +252,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "L1I_READS",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_L1I_READ_ACCESSES],
@@ -267,7 +267,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "DTLB_READS",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_DTLB_READ_ACCESSES],
@@ -282,7 +282,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "ITLB_READS",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_ITLB_READ_ACCESSES],
@@ -297,7 +297,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "BPU_READS",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_BPU_READ_ACCESSES],
@@ -312,7 +312,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "BRANCH",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_BRANCH_INSTRUCTIONS],
@@ -327,7 +327,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "STALLED_CYCLES",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_STALLED_CYCLES_FRONTEND],
@@ -342,7 +342,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "PAGE_FAULTS",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_PAGE_FAULTS],
             &perf_counters[METRIC_PAGE_FAULTS_MAJ],
@@ -353,7 +353,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "ALIGNMENT_FAULTS",
-        .type = METRIC_GRP_TYPE_PERF,
+        .type = MG_TYPE_PERF,
         .perf_counters = (const perf_counter_metric_t *const[]){
             &perf_counters[METRIC_CPU_CYCLES],
             &perf_counters[METRIC_ALIGNMENT_FAULTS],
@@ -363,7 +363,7 @@ const metric_grp_t metric_grps[] = {
 
     {
         .name = "RDTSCP",
-        .type = METRIC_GRP_TYPE_TIMER,
+        .type = MG_TYPE_TIMER,
     },
 
     { 0 }, // end of mg array
@@ -418,7 +418,7 @@ void print_metric_grp_guide(void)
     while (mg->name) {
         printf("  %s:\n", mg->name);
 
-        if (mg->type != METRIC_GRP_TYPE_PERF) {
+        if (mg->type != MG_TYPE_PERF) {
             printf("\n");
             mg++;
             continue;
