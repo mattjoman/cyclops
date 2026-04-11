@@ -15,8 +15,6 @@ CORE_SRCS=core/main.c \
 	core/bench/perf_bench.c \
 	core/bench/timer_bench.c \
 	core/batch/batch.c \
-	core/batch/perf_batch.c \
-	core/batch/timer_batch.c \
 	core/data_processing.c \
 	core/metric.c \
 	core/report.c \

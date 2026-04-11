@@ -11,98 +11,89 @@ typedef enum {
 
     /* counters */
 
-    PC_ID_CPU_CYCLES,
-    PC_ID_REF_CPU_CYCLES,
-    PC_ID_INSTRUCTIONS,
-    PC_ID_LLC_READ_ACCESSES,
-    PC_ID_LLC_READ_MISSES,
-    PC_ID_L1D_READ_ACCESSES,
-    PC_ID_L1D_READ_MISSES,
-    PC_ID_L1I_READ_ACCESSES,
-    PC_ID_L1I_READ_MISSES,
-    PC_ID_DTLB_READ_ACCESSES,
-    PC_ID_DTLB_READ_MISSES,
-    PC_ID_ITLB_READ_ACCESSES,
-    PC_ID_ITLB_READ_MISSES,
-    PC_ID_BPU_READ_ACCESSES,
-    PC_ID_BPU_READ_MISSES,
-    PC_ID_BRANCH_INSTRUCTIONS,
-    PC_ID_BRANCH_MISPREDICTIONS,
-    PC_ID_STALLED_CYCLES_FRONTEND,
-    PC_ID_STALLED_CYCLES_BACKEND,
-    PC_ID_PAGE_FAULTS,
-    PC_ID_PAGE_FAULTS_MAJ,
-    PC_ID_PAGE_FAULTS_MIN,
-    PC_ID_CPU_CLOCK_NS,
-    PC_ID_TASK_CLOCK_NS,
-    PC_ID_ALIGNMENT_FAULTS,
+    METRIC_CPU_CYCLES,
+    METRIC_REF_CPU_CYCLES,
+    METRIC_INSTRUCTIONS,
+    METRIC_LLC_READ_ACCESSES,
+    METRIC_LLC_READ_MISSES,
+    METRIC_L1D_READ_ACCESSES,
+    METRIC_L1D_READ_MISSES,
+    METRIC_L1I_READ_ACCESSES,
+    METRIC_L1I_READ_MISSES,
+    METRIC_DTLB_READ_ACCESSES,
+    METRIC_DTLB_READ_MISSES,
+    METRIC_ITLB_READ_ACCESSES,
+    METRIC_ITLB_READ_MISSES,
+    METRIC_BPU_READ_ACCESSES,
+    METRIC_BPU_READ_MISSES,
+    METRIC_BRANCH_INSTRUCTIONS,
+    METRIC_BRANCH_MISPREDICTIONS,
+    METRIC_STALLED_CYCLES_FRONTEND,
+    METRIC_STALLED_CYCLES_BACKEND,
+    METRIC_PAGE_FAULTS,
+    METRIC_PAGE_FAULTS_MAJ,
+    METRIC_PAGE_FAULTS_MIN,
+    METRIC_CPU_CLOCK_NS,
+    METRIC_TASK_CLOCK_NS,
+    METRIC_ALIGNMENT_FAULTS,
 
-    N_PERF_COUNTERS
-
-} perf_counter_id_t;
-
-typedef enum {
+    METRIC_RDTSCP,
+    METRIC_ARM,
 
     /* ratios */
 
-    PR_ID_INSTRUCTIONS_PER_CYCLE,
-    PR_ID_CYCLES_PER_INSTRUCTION,
-    PR_ID_LLC_READ_MISS_RATE,
-    PR_ID_L1D_READ_MISS_RATE,
-    PR_ID_L1I_READ_MISS_RATE,
-    PR_ID_DTLB_READ_MISS_RATE,
-    PR_ID_ITLB_READ_MISS_RATE,
-    PR_ID_BPU_READ_MISS_RATE,
-    PR_ID_BRANCH_MISPRED_RATE,
-    PR_ID_FE_VS_BE_STALLS,
+    METRIC_INSTRUCTIONS_PER_CYCLE,
+    METRIC_CYCLES_PER_INSTRUCTION,
+    METRIC_LLC_READ_MISS_RATE,
+    METRIC_L1D_READ_MISS_RATE,
+    METRIC_L1I_READ_MISS_RATE,
+    METRIC_DTLB_READ_MISS_RATE,
+    METRIC_ITLB_READ_MISS_RATE,
+    METRIC_BPU_READ_MISS_RATE,
+    METRIC_BRANCH_MISPRED_RATE,
+    METRIC_FE_VS_BE_STALLS,
 
-    N_PERF_RATIOS
+    N_METRICS
 
-} perf_ratio_id_t;
+} metric_id_t;
+
+typedef enum {
+    METRIC_TYPE_RAW,
+    METRIC_TYPE_DERIVED,
+} metric_type_t;
+
+typedef enum {
+    METRIC_BE_PERF,
+    METRIC_BE_CPU_INSTRUCTION,
+} metric_backend_t;
 
 typedef struct {
-    perf_counter_id_t id;
     const char *name;
-} perf_counter_metric_t;
-
-typedef struct {
-    perf_ratio_id_t id;
-    const char *name;
-    perf_counter_id_t numerator_id;
-    perf_counter_id_t denominator_id;
-} perf_ratio_metric_t;
+    metric_type_t type;
+    metric_backend_t backend;
+    metric_id_t numerator;
+    metric_id_t denominator;
+    /* TODO: add supported architectures */
+} metric_t;
 
 /*** METRIC GROUPS ***/
 
-typedef enum {
-    MG_TYPE_PERF,
-    MG_TYPE_TIMER,
-} mg_type_t;
-
-typedef enum {
-    MG_ID_RDTSCP,
-    MG_ID_ARM_TIMER,
-} mg_id_t;
-
-//typedef enum {
-//} mg_id_t;
-
 typedef struct {
-    /* must be unique */
     const char *name;
-
-    mg_type_t type;
-    mg_id_t id;
-
-
-    /* only populated for perf metric groups */
-    const perf_counter_metric_t *const *perf_counters;
-    const perf_ratio_metric_t *const *perf_ratios;
+    metric_backend_t backend;
+    int n_metrics;
+    metric_id_t *metrics;
 } metric_grp_t;
 
+const metric_t *get_metric_by_id(metric_id_t id);
+metric_id_t mg_get_nth_raw_id(const metric_grp_t *mg, int n);
+metric_id_t mg_get_nth_derived_id(const metric_grp_t *mg, int n);
+
 const metric_grp_t *get_mg_by_name(const char *name);
-int mg_n_perf_counters(const metric_grp_t *mg);
-int mg_n_perf_ratios(const metric_grp_t *mg);
+
+int mg_n_raw(const metric_grp_t *mg);
+int mg_n_derived(const metric_grp_t *mg);
+
 void print_metric_grp_guide(void);
 
 #endif

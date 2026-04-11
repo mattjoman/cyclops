@@ -34,17 +34,7 @@ static batch_conf_t *init_batch_conf(unsigned long long warmup_runs,
     return cfg;
 }
 
-uint64_t *alloc_uint64_array(unsigned long long length)
-{
-    uint64_t *array = calloc(length, sizeof(uint64_t));
-    if (!array) {
-        perror("Failed to allocate uint64 array");
-        exit(1);
-    }
-    return array;
-}
-
-double *alloc_double_array(unsigned long long length)
+static double *alloc_double_array(unsigned long long length)
 {
     double *array = calloc(length, sizeof(double));
     if (!array) {
@@ -54,19 +44,138 @@ double *alloc_double_array(unsigned long long length)
     return array;
 }
 
+static batch_data_t *init_batch_data(batch_conf_t *cfg)
+{
+    batch_data_t *data;
+    if (!(data = calloc(1, sizeof(batch_data_t)))) {
+        perror("Failed to allocate memory for batch_data_t struct");
+        exit(1);
+    }
+
+    const metric_grp_t *mg = cfg->mg;
+
+    data->n_raw = mg_n_raw(mg);
+    data->n_derived = mg_n_derived(mg);
+
+    assert(data->n_raw > 0);
+
+    if (!(data->raw_data = calloc(data->n_raw, sizeof(metric_data_t)))) {
+        perror("Failed to allocate memory for perf counters");
+        exit(1);
+    }
+
+    if (data->n_derived) {
+        if (!(data->derived_data = calloc(data->n_derived,
+                                          sizeof(metric_data_t)))) {
+            perror("Failed to allocate memory for perf ratios");
+            exit(1);
+        }
+    }
+
+    for (int i = 0; i < data->n_raw; i++) {
+        data->raw_data[i].run_vals = alloc_double_array(cfg->batch_runs);
+        data->raw_data[i].metric_id = mg_get_nth_raw_id(mg, i);
+    }
+
+    for (int i = 0; i < data->n_derived; i++) {
+        data->derived_data[i].run_vals = alloc_double_array(cfg->batch_runs);
+        data->derived_data[i].metric_id = mg_get_nth_derived_id(mg, i);
+    }
+
+    return data;
+}
+
+static void destroy_batch_data(batch_data_t *data)
+{
+    for (int i = 0; i < data->n_raw; i++) {
+        free(data->raw_data[i].run_vals);
+        data->raw_data[i].run_vals = NULL;
+    }
+
+    for (int i = 0; i < data->n_derived; i++) {
+        free(data->derived_data[i].run_vals);
+        data->derived_data[i].run_vals = NULL;
+    }
+
+    free(data->raw_data);
+    data->raw_data = NULL;
+
+    free(data->derived_data);
+    data->derived_data = NULL;
+
+    free(data);
+    data = NULL;
+}
+
+static void process_perf_counter_data(batch_conf_t *cfg,
+                                      batch_data_t *batch_data)
+{
+    double_agg_t agg;
+
+    for (int i = 0; i < batch_data->n_raw; i++) {
+        agg = aggregate_double(batch_data->raw_data[i].run_vals,
+                               cfg->batch_runs);
+        batch_data->raw_data[i].agg = agg;
+    }
+}
+
+static void process_perf_ratio_data(batch_conf_t *cfg,
+                                    batch_data_t *bd)
+{
+    for (int i = 0; i < bd->n_derived; i++) {
+
+        metric_data_t *ratio = &bd->derived_data[i];
+        const metric_t *m = get_metric_by_id(ratio->metric_id);
+
+        double *numerators = NULL;
+        double *denominators = NULL;
+
+        for (int j = 0; j < bd->n_raw; j++) {
+            if (numerators && denominators) {
+                break;
+            }
+
+            if (bd->raw_data[j].metric_id == m->numerator) {
+                numerators = bd->raw_data[j].run_vals;
+            } else if (bd->raw_data[j].metric_id == m->denominator) {
+                denominators = bd->raw_data[j].run_vals;
+            }
+        }
+
+        calc_ratios(bd->derived_data[i].run_vals,
+                    numerators,
+                    denominators,
+                    cfg->batch_runs);
+
+        ratio->agg = aggregate_double(ratio->run_vals, cfg->batch_runs);
+    }
+}
+
 void run_batch(unsigned long long warmup_runs,
                unsigned long long batch_runs,
                workload_t *wl,
                const metric_grp_t *mg)
 {
     batch_conf_t *cfg = init_batch_conf(warmup_runs, batch_runs, wl, mg);
+    batch_data_t *batch_data = init_batch_data(cfg);
 
-    // TODO: pass batch config pointer rather than passing by value
-    if (mg->type == MG_TYPE_TIMER) {
-        run_timer_batch(cfg);
-    } else {
-        run_perf_batch(cfg);
+    cfg->wl->init(cfg->wl);
+
+    if (cfg->mg->backend == METRIC_BE_PERF) {
+        bench_perf_event_open(cfg, batch_data, cfg->wl->workload);
+    } else if (cfg->mg->backend == METRIC_BE_CPU_INSTRUCTION) {
+        bench_func_t bench_func = get_timer_bench_func(cfg->mg);
+        bench_func(cfg, batch_data, cfg->wl->workload);
     }
 
+    cfg->wl->clean();
+
+    process_perf_counter_data(cfg, batch_data);
+    process_perf_ratio_data(cfg, batch_data);
+
+    batch_to_csv(cfg, batch_data);
+    run_report(cfg, batch_data);
+
+    destroy_batch_data(batch_data);
     free(cfg);
 }

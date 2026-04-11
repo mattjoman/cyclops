@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <errno.h>
 
+#include "../../include/metric.h"
 #include "../../include/bench.h"
 #include "./internal.h"
 
@@ -26,7 +27,7 @@ static uint64_t rdtscp()
 }
 
 static void bench_rdtscp(batch_conf_t *batch_cfg,
-                 timer_batch_t *batch_data,
+                 batch_data_t *batch_data,
                  void (*workload)(void))
 {
     uint64_t start, end;
@@ -41,17 +42,17 @@ static void bench_rdtscp(batch_conf_t *batch_cfg,
         start = rdtscp();
         workload();
         end = rdtscp();
-        batch_data->timer.run_vals[i] = end - start;
+        batch_data->raw_data[0].run_vals[i] = (double)(end - start);
     }
 }
 
 #endif
 
-bench_func_t get_timer_bench_func(mg_id_t id)
+bench_func_t get_timer_bench_func(const metric_grp_t *mg)
 {
-    switch (id) {
+    switch (mg->metrics[0]) {
 
-        case MG_ID_RDTSCP:
+        case METRIC_RDTSCP:
 #if defined(__x86_64__) || defined(__i386__) || defined(__amd64__)
             return bench_rdtscp;
 #else
@@ -59,7 +60,7 @@ bench_func_t get_timer_bench_func(mg_id_t id)
             exit(1);
 #endif
 
-        case MG_ID_ARM_TIMER:
+        case METRIC_ARM:
 #if defined(__aarch64__) || defined(__arm__)
             fprintf(stderr, "Arm timer not implemented yet\n");
 #else
