@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 {
     char *workload_str = NULL;
     char *metric_grp_str  = NULL;
+    char *output_file_name  = NULL;
     unsigned long long batch_runs = 0;
     unsigned long long warmup_runs = 0;
     int n_wl_params = 0;
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
         {"metric-grp", required_argument, 0, 'm'},
         {"batch-runs", required_argument, 0, 'r'},
         {"warmup-runs", required_argument, 0, 'u'},
+        {"ouptut-file", required_argument, 0, 'o'},
         {"param", required_argument, 0, 'p'},
         {0, 0, 0, 0}
     };
@@ -43,7 +45,7 @@ int main(int argc, char *argv[])
     int opt;
     char *key;
     char *eq;
-    while ((opt = getopt_long(argc, argv, "hw:m:r:u:p:", long_opts, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "hw:m:r:u:o:p:", long_opts, NULL)) != -1) {
         switch (opt) {
             case 'h':
                 fputs(help_text, stdout);
@@ -61,6 +63,9 @@ int main(int argc, char *argv[])
                 break;
             case 'u':
                 warmup_runs = strtoull(optarg, NULL, 10);
+                break;
+            case 'o':
+                output_file_name = optarg;
                 break;
             case 'p':
                 if (n_wl_params >= MAX_WL_ARGS) {
@@ -101,7 +106,7 @@ int main(int argc, char *argv[])
         wl_set_param(wl, wl_param_keys[i], wl_param_args[i]);
     }
 
-    run_batch(warmup_runs, batch_runs, wl, mg);
+    run_batch(warmup_runs, batch_runs, wl, mg, output_file_name);
 
     return 0;
 }

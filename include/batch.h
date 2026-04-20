@@ -35,6 +35,7 @@ typedef struct batch_data {
 void run_batch(unsigned long long warmup_runs,
                unsigned long long batch_runs,
                workload_t *wl,
-               const metric_grp_t *mg);
+               const metric_grp_t *mg,
+               const char *output_file_name);
 
 #endif

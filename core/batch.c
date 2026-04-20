@@ -157,7 +157,8 @@ static void process_perf_ratio_data(batch_conf_t *cfg,
 void run_batch(unsigned long long warmup_runs,
                unsigned long long batch_runs,
                workload_t *wl,
-               const metric_grp_t *mg)
+               const metric_grp_t *mg,
+               const char *output_file_name)
 {
     batch_conf_t *cfg = init_batch_conf(warmup_runs, batch_runs, wl, mg);
     batch_data_t *batch_data = init_batch_data(cfg);
@@ -170,7 +171,7 @@ void run_batch(unsigned long long warmup_runs,
     process_perf_counter_data(cfg, batch_data);
     process_perf_ratio_data(cfg, batch_data);
 
-    batch_to_csv(cfg, batch_data);
+    batch_to_csv(cfg, batch_data, output_file_name);
     run_report(cfg, batch_data);
 
     destroy_batch_data(batch_data);
