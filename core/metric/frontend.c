@@ -492,7 +492,7 @@ void print_metric_grp_guide(void)
 
     const metric_grp_t *mg = &metric_grps[0];
     while (mg->name) {
-        printf("  %s\n\n", mg->name);
+        printf("  %s\n", mg->name);
         mg++;
     }
 }

@@ -13,9 +13,10 @@ static const char help_text[] =
 "Options:\n\n"
 "  -h, --help                       Display this message\n"
 "  -w, --workload WORKLOAD          Select workload to benchmark\n"
-"  -g, --metric-group GROUP         Select a group of metrics to record\n"
+"  -m, --metric-group GROUP         Select a group of metrics to record\n"
 "  -r, --batch-runs RUNS            Number of runs in the batch\n"
 "  -u, --warmup-runs RUNS           Number of warmup runs\n"
+"  -o, --output-file FILENAME       Output batch results to a CSV file\n"
 "\n";
 
 #define MAX_WL_ARGS 5
