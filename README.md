@@ -12,7 +12,7 @@ framework for measuring C code.
 
 ```bash
 # clone repository
-git clone https://mattjoman/cyclops.git cyclops
+git clone https://mj-penney/cyclops.git cyclops
 
 # enter repository
 cd cyclops
@@ -21,7 +21,7 @@ cd cyclops
 make
 
 # run
-./cyclops -w STRIDED_ARRAY -g IPC -p array-elements=1000
+./cyclops -w STRIDED_ARRAY -m IPC -p array-elements=1000
 ```
 
 ## Benchmarking Methodology
