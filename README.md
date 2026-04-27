@@ -10,19 +10,13 @@ framework for measuring C code.
 
 ## Features
 
-- Workload plugin system to easily write custom workloads (see
-  `docs/workload.md`)
-    - Workloads can have custom parameters - useful for experiments where you
-      vary an array size (for example)
-- Groups of metrics to record for a given workload (see `docs/metrics.md`)
-    - Metric groups for `perf_event_open()` counters and `rdtscp`
-    - Ratios like IPC (instructions per cycle) calculated per-run
-- Batches allowing the user to set the number of warmup runs, batch runs,
-  workload and metric group
-    - Aggregates (min, max & median) are calculated for the batch
-- Results are written to stdout (aggregate summary) & optionally a CSV file
-    - User decides whether CSV contains aggregates or per-run data
-    - CSVs contain metadata (lines starting with "#")
+- Workload plugin system to easily write custom workloads with scriptable
+  workload parameters (see `docs/workload.md`)
+- Metric groups including raw metrics like PMU counters (`perf_event_open()`)
+  and `rdtscp`, and ratios like IPC (see `docs/metrics.md` for measurement
+  methodology)
+- Batches with user-defined warmup runs and batch runs
+- Results are written to stdout & CSV files with metadata for reproducability
 
 ## Build and Run
 
