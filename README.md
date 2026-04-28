@@ -1,22 +1,29 @@
 # Cyclops
 
-A minimal microbenchmarking tool for Linux build directly on top of 
-`perf_event_open()` and timers like `rdtscp`.
+## Project Overview
 
-## Motivation
+**Cyclops** is a framework for investigating CPU behaviour and software
+performance.
 
-I built **cyclops** because I wanted a small, accurate microbenchmarking
-framework for measuring C code.
+It allows the user to create experiments using low-level resources like PMU
+counters and `rdtscp`, with sensible implementations to improve avoid pitfalls.
+**Cyclops** makes it easy to design reproducible and accurate experiments that
+can be easily orchestrated from the command line and visualised to gain
+insights.
 
 ## Features
 
+- Batches with user-defined warmup runs, batch runs and aggregation
 - Workload plugin system to easily write custom workloads with scriptable
   workload parameters (see `docs/workload.md`)
+- Parameter sweeps to run multiple batches while varying one parameter and
+  keeping the others fixed
 - Metric groups including raw metrics like PMU counters (`perf_event_open()`)
   and `rdtscp`, and ratios like IPC (see `docs/metrics.md` for measurement
   methodology)
-- Batches with user-defined warmup runs and batch runs
-- Results are written to stdout & CSV files with metadata for reproducability
+- Results are written to stdout & CSV files with metadata for reproducibility
+- Python scripts for running and visualising some default experiments - see
+  `experiments/`
 
 ## Build and Run
 
@@ -36,13 +43,28 @@ make
 
 ## Example Usage
 
-Run the `STRIDED_ARRAY` workload, measuring the `IPC` metric group and write
-output to `output.csv`.
-The batch will have 20 runs (`-r`), and there will be 10 warmup runs (`-u`).
+### Example 1
+
+- Single batch
+- 10 warmup runs
+- 20 batch runs
+- `STRIDED_ARRAY` workload with default params
+- `IPC` metric group
 
 ```bash
+./cyclops -u 10 -r 20 -w STRIDED_ARRAY -m IPC
+```
 
-./cyclops -u 10 -r 20 -w STRIDED_ARRAY -m IPC -o output.csv
+### Example 2
+
+- 3 warmup runs
+- 5 batch runs
+- `STRIDED_ARRAY` workload
+- `L1D_READS` metric group
+- 21 batches, sweeping the `array-elements` param from 10 to 100 in steps of 5
+
+```bash
+./cyclops -u 3 -r 5 -w STRIDED_ARRAY -m L1D_READS -s array-elements=10:100:5
 ```
 
 ## Experiments
