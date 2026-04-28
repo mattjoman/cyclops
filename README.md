@@ -2,8 +2,8 @@
 
 ## Project Overview
 
-**Cyclops** is a framework for investigating CPU behaviour and software
-performance.
+**Cyclops** is a framework for investigating CPU behaviour/architecture and
+software performance.
 
 It allows the user to create experiments using low-level resources like PMU
 counters and `rdtscp`, with sensible implementations to improve avoid pitfalls.
@@ -61,7 +61,7 @@ make
 - 5 batch runs
 - `STRIDED_ARRAY` workload
 - `L1D_READS` metric group
-- 21 batches, sweeping the `array-elements` param from 10 to 100 in steps of 5
+- 19 batches, sweeping the `array-elements` param from 10 to 100 in steps of 5
 
 ```bash
 ./cyclops -u 3 -r 5 -w STRIDED_ARRAY -m L1D_READS -s array-elements=10:100:5
