@@ -25,12 +25,17 @@ int main(int argc, char *argv[])
 {
     char *workload_str = NULL;
     char *metric_grp_str  = NULL;
-    char *output_file_name  = NULL;
+    bool write_batches_to_csv  = false;
     unsigned long long batch_runs = 0;
     unsigned long long warmup_runs = 0;
     int n_wl_params = 0;
     char *wl_param_keys[MAX_WL_ARGS];
     char *wl_param_args[MAX_WL_ARGS];
+
+    char *wl_param_sweep_key = NULL;
+    char *wl_param_sweep_low = NULL;
+    char *wl_param_sweep_high = NULL;
+    char *wl_param_sweep_step = NULL;
 
     static struct option long_opts[] = {
         {"help", no_argument, 0, 'h'},
@@ -38,15 +43,18 @@ int main(int argc, char *argv[])
         {"metric-grp", required_argument, 0, 'm'},
         {"batch-runs", required_argument, 0, 'r'},
         {"warmup-runs", required_argument, 0, 'u'},
-        {"ouptut-file", required_argument, 0, 'o'},
+        {"ouptut-file", no_argument, 0, 'o'},
         {"param", required_argument, 0, 'p'},
+        {"param-sweep", required_argument, 0, 's'},
         {0, 0, 0, 0}
     };
 
     int opt;
     char *key;
     char *eq;
-    while ((opt = getopt_long(argc, argv, "hw:m:r:u:o:p:", long_opts, NULL)) != -1) {
+    char *colon_1;
+    char *colon_2;
+    while ((opt = getopt_long(argc, argv, "hw:m:r:u:op:s:", long_opts, NULL)) != -1) {
         switch (opt) {
             case 'h':
                 fputs(help_text, stdout);
@@ -66,7 +74,7 @@ int main(int argc, char *argv[])
                 warmup_runs = strtoull(optarg, NULL, 10);
                 break;
             case 'o':
-                output_file_name = optarg;
+                write_batches_to_csv = true;
                 break;
             case 'p':
                 if (n_wl_params >= MAX_WL_ARGS) {
@@ -84,7 +92,39 @@ int main(int argc, char *argv[])
                 *eq = '\0'; // split into two strings
                 wl_param_keys[n_wl_params] = key;
                 wl_param_args[n_wl_params] = eq + 1;
+                eq = NULL;
                 n_wl_params++;
+                break;
+            case 's':
+                key = optarg;
+
+                eq = strchr(key, '=');
+                if (!eq) {
+                    fprintf(stderr, "Invalid param format: %s\n", key);
+                    return 1;
+                }
+                *eq = '\0'; // split into two strings
+                wl_param_sweep_key = key;
+                wl_param_sweep_low = eq + 1;
+
+                colon_1 = strchr(wl_param_sweep_low, ':');
+                if (!colon_1) {
+                    fprintf(stderr, "Invalid param format: %s\n", key);
+                    return 1;
+                }
+                *colon_1 = '\0';
+                wl_param_sweep_high = colon_1 + 1;
+                colon_1 = NULL;
+
+                colon_2 = strchr(wl_param_sweep_high, ':');
+                if (!colon_2) {
+                    fprintf(stderr, "Invalid param format: %s\n", key);
+                    return 1;
+                }
+                *colon_2 = '\0';
+                wl_param_sweep_step = colon_2 + 1;
+                colon_2 = NULL;
+
                 break;
             default:
                 fprintf(stderr, "Usage 1\n");
@@ -107,7 +147,15 @@ int main(int argc, char *argv[])
         wl_set_param(wl, wl_param_keys[i], wl_param_args[i]);
     }
 
-    run_batch(warmup_runs, batch_runs, wl, mg, output_file_name);
+    run_cyclops(warmup_runs,
+                batch_runs,
+                wl,
+                mg,
+                wl_param_sweep_key,
+                wl_param_sweep_low,
+                wl_param_sweep_high,
+                wl_param_sweep_step,
+                write_batches_to_csv);
 
     return 0;
 }

@@ -139,47 +139,52 @@ static void write_full_batch(FILE *file, batch_conf_t *cfg,
     }
 }
 
-static void write_aggregated_batch(FILE *file, batch_data_t *batch_data)
-{
-    fprintf(file, "METRIC,MIN,MAX,MEDIAN\n");
-
-    for (int i = 0; i < batch_data->n_raw; i++) {
-        const metric_t *m = get_metric_by_id(
-                                            batch_data->raw_data[i].metric_id);
-        double_agg_t *agg = &batch_data->raw_data[i].agg;
-        fprintf(file, "%s,%.6f,%.6f,%.6f\n", m->name, agg->min, agg->max,
-                                                                agg->median);
-    }
-
-    for (int i = 0; i < batch_data->n_derived; i++) {
-        const metric_t *m = get_metric_by_id(
-                                        batch_data->derived_data[i].metric_id);
-        double_agg_t *agg = &batch_data->derived_data[i].agg;
-        fprintf(file, "%s,%.6f,%.6f,%.6f\n", m->name, agg->min, agg->max,
-                                                                agg->median);
-    }
-}
-
 void batch_to_csv(batch_conf_t *cfg, batch_data_t *batch_data,
-                  const char *output_file_name, bool aggregate)
+                  unsigned long long batch_no)
 {
-    if (!output_file_name) {
-        return;
-    }
+    char file_name[128];
 
-    FILE *file = fopen(output_file_name, "w");
+    snprintf(file_name, sizeof(file_name), "batch_%llu.csv", batch_no);
+
+    FILE *file = fopen(file_name, "w");
     if (!file) {
         perror("Failed to open csv file");
         exit(1);
     }
 
     write_batch_metadata(file, cfg);
-
-    if (aggregate) {
-        write_aggregated_batch(file, batch_data);
-    } else {
-        write_full_batch(file, cfg, batch_data);
-    }
+    write_full_batch(file, cfg, batch_data);
 
     fclose(file);
+}
+
+void param_sweep_to_csv(param_sweep_t *ps)
+{
+    char file_name[128];
+
+    for (int i = 0; i < ps->mg->n_metrics; i++) {
+        const metric_t *m = get_metric_by_id(ps->data[i].metric_id);
+
+        snprintf(file_name, sizeof(file_name), "%s.csv", m->name);
+
+        FILE *file = fopen(file_name, "w");
+        if (!file) {
+            perror("Failed to open csv file");
+            exit(1);
+        }
+
+        fprintf(file, "%s,MIN,MAX,MEDIAN\n", ps->wl_param_key);
+
+        for (unsigned long long b = 0; b < ps->n_batches; b++) {
+            ps_batch_data_t *batch = &ps->data[i].batch_vals[b];
+            fprintf(file,
+                    "%llu,%.6f,%.6f,%.6f\n",
+                    batch->param_sweep_val,
+                    batch->agg.min,
+                    batch->agg.max,
+                    batch->agg.median);
+        }
+
+        fclose(file);
+    }
 }
