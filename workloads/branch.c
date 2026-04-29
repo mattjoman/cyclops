@@ -5,20 +5,42 @@
 
 unsigned long long pattern_len;
 unsigned long long n_branches;
+unsigned long long bias;
 
 static char *array;
+
+/*
+ * Random number generator
+ */
+static unsigned long long xorshift64()
+{
+    static unsigned long long x = 88172645463325252ull;
+    x ^= x << 13;
+    x ^= x >> 7;
+    x ^= x << 17;
+    return x;
+}
 
 static void init(workload_t *wl)
 {
     pattern_len = wl_get_param(wl, "pattern-len");
     n_branches = wl_get_param(wl, "n-branches");
+    bias = wl_get_param(wl, "bias");
+
+    /* sanitise input */
+    if (pattern_len > n_branches) {
+        pattern_len = n_branches;
+    }
+    if (bias > 100) {
+        bias = 100;
+    }
 
     char *pattern = malloc(pattern_len * sizeof(char));
     array = malloc(n_branches * sizeof(char));
 
-    //srand(42);
     for (unsigned long long i = 0; i < pattern_len; i++) {
-        pattern[i] = rand() % 2;
+        unsigned long long random = xorshift64() % 100;
+        pattern[i] = (random < bias) ? 1 : 0;
     }
 
     unsigned long long full_repetitions = n_branches / pattern_len;
@@ -58,13 +80,16 @@ static wl_param_t params[] = {
     }, {
         .key = "n-branches",
         .default_value = "1000",
-    },
+    }, {
+        .key = "bias",
+        .default_value = "50", // range: 0 - 100 (50 is 'unbiased')
+    }
 };
 
 static workload_t wl = {
     .name = "BRANCH",
 
-    .n_params = 2,
+    .n_params = 3,
     .params = params,
 
     .init = init,

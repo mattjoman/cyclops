@@ -11,15 +11,18 @@ WARMUP_RUNS = 0
 AGGREGATE = "MEDIAN"
 
 WORKLOAD = "BRANCH"
+
 METRIC_GRP = "BRANCH"
 METRIC = "BRANCH_MISPRED_RATE"
+#METRIC_GRP = "BPU_READS"
+#METRIC = "BPU_READ_MISS_RATE"
 
-def run_experiment():
+def run_experiment(bias: int):
 
     param_sweep = ParamSweep(
         key="pattern-len",
         low=1,
-        high=30000,
+        high=100000,
         step=100,
     )
 
@@ -29,7 +32,8 @@ def run_experiment():
         warmup_runs=WARMUP_RUNS,
         batch_runs=BATCH_RUNS,
         params={
-            "n-branches": 50000,
+            "n-branches": 100000,
+            "bias": bias,
         },
         param_sweep=param_sweep,
     )
@@ -45,16 +49,25 @@ def run_experiment():
 
 if __name__ == "__main__":
 
-    x, y = run_experiment()
+    #biases = [50, 60, 70, 80, 90, 95, 99]
+    biases = [50, 40, 30, 20, 10, 5, 1]
+
+    data = []
+    for bias in biases:
+        x, y = run_experiment(bias)
+        data.append({ "x": x, "y": y, "bias": bias})
 
     plt.figure()
-    plt.plot(x, y, marker="", label="")
-    plt.xscale("log")
+
+    for d in data:
+        plt.plot(d["x"], d["y"], marker="", label=f"Bias: {d["bias"]}")
+
+    #plt.xscale("log")
     #plt.yscale("log")
     plt.xlabel("Pattern Len")
     plt.ylabel(METRIC)
     plt.title(WORKLOAD)
     plt.grid(True)
-    #plt.legend()
+    plt.legend()
     plt.savefig(f"branch.png")
     plt.close()
