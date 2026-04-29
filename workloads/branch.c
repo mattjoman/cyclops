@@ -1,0 +1,75 @@
+#include <stdlib.h>
+#include <string.h>
+
+#include "../include/workload.h"
+
+unsigned long long pattern_len;
+unsigned long long n_branches;
+
+static char *array;
+
+static void init(workload_t *wl)
+{
+    pattern_len = wl_get_param(wl, "pattern-len");
+    n_branches = wl_get_param(wl, "n-branches");
+
+    char *pattern = malloc(pattern_len * sizeof(char));
+    array = malloc(n_branches * sizeof(char));
+
+    //srand(42);
+    for (unsigned long long i = 0; i < pattern_len; i++) {
+        pattern[i] = rand() % 2;
+    }
+
+    unsigned long long full_repetitions = n_branches / pattern_len;
+    unsigned long long remainder = n_branches % pattern_len;
+
+    for (unsigned long long i = 0; i < full_repetitions; i++) {
+        memcpy(&array[i * pattern_len], pattern, pattern_len * sizeof(char));
+    }
+
+    memcpy(&array[full_repetitions * pattern_len], pattern,
+                                                    remainder * sizeof(char));
+
+    free(pattern);
+}
+
+static void clean(void)
+{
+    free(array);
+}
+
+__attribute__((noinline)) static void workload(void)
+{
+    volatile unsigned long long sum = 0;
+    for (unsigned long long i = 0; i < n_branches; i++) {
+        if (array[i] == 0) {
+            sum += 1;
+        } else {
+            sum -= 1;
+        }
+    }
+}
+
+static wl_param_t params[] = {
+    {
+        .key = "pattern-len",
+        .default_value = "16",
+    }, {
+        .key = "n-branches",
+        .default_value = "1000",
+    },
+};
+
+static workload_t wl = {
+    .name = "BRANCH",
+
+    .n_params = 2,
+    .params = params,
+
+    .init = init,
+    .clean = clean,
+    .workload = workload,
+};
+
+REGISTER_WORKLOAD(&wl)
