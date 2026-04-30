@@ -10,58 +10,6 @@ WARMUP_RUNS = 5
 #AGGREGATE = "MAX"
 AGGREGATE = "MEDIAN"
 
-def run_L1D_experiment():
-
-    param_sweep = ParamSweep(
-        key="array-elements",
-        low=100,
-        high=10000,
-        step=10,
-    )
-
-    cyclops = Cyclops(
-        workload="STRIDED_ARRAY",
-        metric_grp="L1D_READS",
-        warmup_runs=WARMUP_RUNS,
-        batch_runs=BATCH_RUNS,
-        param_sweep=param_sweep,
-    )
-    cyclops.exec()
-
-    df = pd.read_csv(
-        "L1D_READ_MISS_RATE.csv",
-        comment="#",
-        index_col=param_sweep.key
-    )
-
-    return 64 * df.index.values, df[AGGREGATE].values
-
-def run_LLC_experiment():
-
-    param_sweep = ParamSweep(
-        key="array-elements",
-        low=10000,
-        high=1000000,
-        step=10000,
-    )
-
-    cyclops = Cyclops(
-        workload="STRIDED_ARRAY",
-        metric_grp="LLC_READS",
-        warmup_runs=WARMUP_RUNS,
-        batch_runs=BATCH_RUNS,
-        param_sweep=param_sweep,
-    )
-    cyclops.exec()
-
-    df = pd.read_csv(
-        "LLC_READ_MISS_RATE.csv",
-        comment="#",
-        index_col=param_sweep.key
-    )
-
-    return 64 * df.index.values, df[AGGREGATE].values
-
 WORKLOAD = "STRIDED_ARRAY"
 
 L1D = 0
