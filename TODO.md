@@ -4,7 +4,7 @@
 
 - Implement a logging module
 - Improve error handling (integrate with logging module?)
-- Add testing
+- Add testing (start with high-level system tests with pytest)
 
 ## Documentation
 
