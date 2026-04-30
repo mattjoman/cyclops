@@ -17,7 +17,7 @@ METRIC = "BRANCH_MISPRED_RATE"
 #METRIC_GRP = "BPU_READS"
 #METRIC = "BPU_READ_MISS_RATE"
 
-def run_experiment(bias: int):
+def sweep_pattern_len(bias: int):
 
     param_sweep = ParamSweep(
         key="pattern-len",
@@ -47,14 +47,20 @@ def run_experiment(bias: int):
 
     return df.index.values, df[AGGREGATE].values
 
-if __name__ == "__main__":
+def run_bias_experiment(bias_take: bool):
 
-    #biases = [50, 60, 70, 80, 90, 95, 99]
-    biases = [50, 40, 30, 20, 10, 5, 1]
+    if bias_take:
+        biases = [50, 60, 70, 80, 90, 95, 99]
+        file_name = "branch_bias_take.png"
+        figure_title = "Misprediction Rate (bias: take branch)"
+    else:
+        biases = [50, 40, 30, 20, 10, 5, 1]
+        file_name = "branch_bias_dont_take.png"
+        figure_title = "Misprediction Rate (bias: don't take branch)"
 
     data = []
     for bias in biases:
-        x, y = run_experiment(bias)
+        x, y = sweep_pattern_len(bias)
         data.append({ "x": x, "y": y, "bias": bias})
 
     plt.figure()
@@ -64,10 +70,15 @@ if __name__ == "__main__":
 
     #plt.xscale("log")
     #plt.yscale("log")
-    plt.xlabel("Pattern Len")
+    plt.xlabel("Pattern Lenth")
     plt.ylabel(METRIC)
-    plt.title(WORKLOAD)
+    plt.title(figure_title)
     plt.grid(True)
-    plt.legend()
-    plt.savefig(f"branch.png")
+    plt.ylim(0, 0.3)
+    plt.legend(loc='center right', bbox_to_anchor=(1, 0.5))
+    plt.savefig(file_name)
     plt.close()
+
+if __name__ == "__main__":
+    run_bias_experiment(True)
+    run_bias_experiment(False)

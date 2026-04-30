@@ -107,7 +107,7 @@ python estimate_cache_size.py
 
 #### Results
 
-![L1D and LLC miss rate curves](images/cache_miss_rates.png)
+![L1D and LLC miss rate curves](images/estimate_cache_size.png)
 
 As the array size increases, and exceeds the size of a cache, the cache can no
 longer hold all the data.
