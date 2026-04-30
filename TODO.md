@@ -16,6 +16,8 @@
     - Descriptions and more details (e.g. metrics within the group and workload
       params & usage) should be displayed if the user does
       `./cyclops -w BRANCH` with no other args
+- Document how batches and parameter-sweeps work, and how results are
+  aggregated and output to CSV files
 
 ## CLI
 
