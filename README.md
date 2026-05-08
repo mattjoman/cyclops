@@ -103,4 +103,4 @@ Figures (png) will be saved in `experiments/`.
 
 See `investigations/` for investigations and writeups using **Cyclops**:
 
-- ![Reverse-engineering my cache](investigations/estimate_cache_size.md)
+- ![Reverse-engineering my cache](investigations/cache_size_estimation.md)
