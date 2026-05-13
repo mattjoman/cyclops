@@ -45,6 +45,8 @@ static param_sweep_t *init_param_sweep(cyclops_cfg_t *cyclops_cfg)
 
     ps->wl = wl;
     ps->mg = mg;
+    ps->warmup_runs = cyclops_cfg->warmup_runs;
+    ps->batch_runs = cyclops_cfg->batch_runs;
     ps->wl_param_key = cyclops_cfg->ps_wl_param_key;
     ps->wl_param_low = cyclops_cfg->ps_wl_param_low;
     ps->wl_param_high = cyclops_cfg->ps_wl_param_high;
