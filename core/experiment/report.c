@@ -155,6 +155,30 @@ void batch_to_csv(batch_data_t *batch_data,
     fclose(file);
 }
 
+static void ps_write_metadata(FILE *file, param_sweep_t *ps)
+{
+    fprintf(file,
+            "# ./cyclops -w %s -m %s -u %llu -r %llu -s %s=%s:%s:%s",
+            ps->wl->name,
+            ps->mg->name,
+            ps->warmup_runs,
+            ps->batch_runs,
+            ps->wl_param_key,
+            ps->wl_param_low,
+            ps->wl_param_high,
+            ps->wl_param_step);
+
+    for (int i = 0; i < ps->wl->n_params; i++) {
+        if (strcmp(ps->wl->params[i].key, ps->wl_param_key) != 0) {
+            fprintf(file,
+                    " -p %s=%llu",
+                    ps->wl->params[i].key,
+                    wl_get_param(ps->wl, ps->wl->params[i].key));
+        }
+    }
+    fprintf(file, "\n");
+}
+
 void param_sweep_to_csv(param_sweep_t *ps)
 {
     if (!ps->file_name) {
@@ -166,6 +190,8 @@ void param_sweep_to_csv(param_sweep_t *ps)
         perror("Failed to open csv file");
         exit(1);
     }
+
+    ps_write_metadata(file, ps);
 
     /* column headers */
     fprintf(file, "%s,", ps->wl_param_key);
