@@ -181,11 +181,7 @@ static void ps_write_metadata(FILE *file, param_sweep_t *ps)
 
 void param_sweep_to_csv(param_sweep_t *ps)
 {
-    if (!ps->file_name) {
-        return;
-    }
-
-    FILE *file = fopen(ps->file_name, "w");
+    FILE *file = fopen("param_sweep.csv", "w");
     if (!file) {
         perror("Failed to open csv file");
         exit(1);

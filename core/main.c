@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
+#include <stdbool.h>
 
 #include "../include/cyclops.h"
 #include "../include/experiment.h"
@@ -22,6 +23,11 @@ static const char help_text[] =
 
 #define MAX_WL_ARGS 5
 
+enum {
+    OPT_BATCH_CSV = 256,
+    OPT_PARAM_SWEEP_CSV = 257,
+};
+
 int main(int argc, char *argv[])
 {
     char *workload_str = NULL;
@@ -38,15 +44,22 @@ int main(int argc, char *argv[])
     char *wl_param_sweep_high = NULL;
     char *wl_param_sweep_step = NULL;
 
+    bool batch_csv = false;
+    bool param_sweep_csv = false;
+
     static struct option long_opts[] = {
         {"help", no_argument, 0, 'h'},
         {"workload", required_argument, 0, 'w'},
         {"metric-grp", required_argument, 0, 'm'},
         {"batch-runs", required_argument, 0, 'r'},
         {"warmup-runs", required_argument, 0, 'u'},
-        {"ouptut-file", required_argument, 0, 'o'},
         {"param", required_argument, 0, 'p'},
         {"param-sweep", required_argument, 0, 's'},
+
+        /* long opts only */
+        {"batch-csv", no_argument, 0, OPT_BATCH_CSV},
+        {"param-sweep-csv", no_argument, 0, OPT_PARAM_SWEEP_CSV},
+
         {0, 0, 0, 0}
     };
 
@@ -127,6 +140,12 @@ int main(int argc, char *argv[])
                 colon_2 = NULL;
 
                 break;
+            case OPT_BATCH_CSV:
+                batch_csv = true;
+                break;
+            case OPT_PARAM_SWEEP_CSV:
+                param_sweep_csv = true;
+                break;
             default:
                 fprintf(stderr, "Usage 1\n");
                 return 1;
@@ -158,7 +177,8 @@ int main(int argc, char *argv[])
     cfg->ps_wl_param_low = wl_param_sweep_low;
     cfg->ps_wl_param_high = wl_param_sweep_high;
     cfg->ps_wl_param_step = wl_param_sweep_step;
-    cfg->file_name = file_name;
+    cfg->batch_csv = batch_csv;
+    cfg->param_sweep_csv = param_sweep_csv;
 
     if (cfg->ps_wl_param_key) {
         param_sweep_run(cfg);

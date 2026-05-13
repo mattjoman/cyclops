@@ -42,6 +42,7 @@ batch_data_t *init_batch_data(cyclops_cfg_t *cyclops_cfg)
 
     data->n_raw = mg_n_raw(mg);
     data->n_derived = mg_n_derived(mg);
+    data->to_csv = cyclops_cfg->batch_csv;
 
     assert(data->n_raw > 0);
 
@@ -143,7 +144,6 @@ static void process_perf_ratio_data(batch_data_t *bd)
 }
 
 void run_batch(batch_data_t *batch_data,
-               bool write_batch_to_csv,
                unsigned long long batch_no)
 {
     const metric_backend_t *backend = get_backend(batch_data->mg->backend);
@@ -155,7 +155,7 @@ void run_batch(batch_data_t *batch_data,
     process_perf_counter_data(batch_data);
     process_perf_ratio_data(batch_data);
 
-    if (write_batch_to_csv) {
+    if (batch_data->to_csv) {
         batch_to_csv(batch_data, batch_no);
     }
     run_report(batch_data);
@@ -164,7 +164,7 @@ void run_batch(batch_data_t *batch_data,
 void batch_single_run(cyclops_cfg_t *cyclops_cfg)
 {
     batch_data_t *batch = init_batch_data(cyclops_cfg);
-    run_batch(batch, false, 0);
+    run_batch(batch, 0);
     destroy_batch_data(batch);
 }
 

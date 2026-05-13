@@ -17,15 +17,13 @@ METRIC = "BRANCH_MISPRED_RATE"
 #METRIC_GRP = "BPU_READS"
 #METRIC = "BPU_READ_MISS_RATE"
 
-FILE_NAME = "branch.csv"
-
 def sweep_pattern_len(bias: int):
 
     param_sweep = ParamSweep(
         key="pattern-len",
-        low=10,
-        high=1000,
-        step=10,
+        low=100,
+        high=10000,
+        step=100,
     )
 
     cyclops = Cyclops(
@@ -38,12 +36,11 @@ def sweep_pattern_len(bias: int):
             "bias": bias,
         },
         param_sweep=param_sweep,
-        file_name=FILE_NAME,
     )
     cyclops.exec()
 
     df = pd.read_csv(
-        f"{FILE_NAME}",
+        f"param_sweep.csv",
         comment="#",
         index_col=param_sweep.key
     )

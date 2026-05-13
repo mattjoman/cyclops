@@ -23,7 +23,6 @@ void calc_ratios(double results[], const double numerators[],
 batch_data_t *init_batch_data(cyclops_cfg_t *cyclops_cfg);
 void destroy_batch_data(batch_data_t *data);
 void run_batch(batch_data_t *batch_data,
-               bool write_batch_to_csv,
                unsigned long long batch_no);
 metric_data_t *batch_get_metric_data(batch_data_t *data,
                                      metric_id_t metric_id);

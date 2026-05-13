@@ -12,8 +12,6 @@ AGGREGATE = "MEDIAN"
 
 WORKLOAD = "STRIDED_ARRAY"
 
-FILE_NAME = "estimate_cache_size.csv"
-
 L1D = 0
 LLC = 1
 
@@ -45,12 +43,11 @@ def sweep_array_elements(cache: int):
         warmup_runs=WARMUP_RUNS,
         batch_runs=BATCH_RUNS,
         param_sweep=param_sweep,
-        file_name=FILE_NAME,
     )
     cyclops.exec()
 
     df = pd.read_csv(
-        f"{FILE_NAME}",
+        f"param_sweep.csv",
         comment="#",
         index_col=param_sweep.key
     )

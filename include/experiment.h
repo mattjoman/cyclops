@@ -35,6 +35,8 @@ typedef struct batch_data {
 
     int n_derived;
     metric_data_t *derived_data;
+
+    bool to_csv;
 } batch_data_t;
 
 void batch_single_run(cyclops_cfg_t *cyclops_cfg);
@@ -64,10 +66,10 @@ typedef struct {
     char *wl_param_high;
     char *wl_param_step;
 
-    char *file_name;
-
     unsigned long long n_batches;
     ps_data_t *data;
+
+    bool to_csv;
 } param_sweep_t;
 
 void param_sweep_run(cyclops_cfg_t *cyclops_cfg);

@@ -51,8 +51,8 @@ static param_sweep_t *init_param_sweep(cyclops_cfg_t *cyclops_cfg)
     ps->wl_param_low = cyclops_cfg->ps_wl_param_low;
     ps->wl_param_high = cyclops_cfg->ps_wl_param_high;
     ps->wl_param_step = cyclops_cfg->ps_wl_param_step;
-    ps->file_name = cyclops_cfg->file_name;
     ps->n_batches = ps_n_batches(ps);
+    ps->to_csv = cyclops_cfg->param_sweep_csv;
 
     if (!(ps->data = calloc(mg->n_metrics, sizeof(ps_data_t)))) {
         perror("Failed to allocate memory for ps_data_t array");
@@ -117,7 +117,7 @@ void param_sweep_run(cyclops_cfg_t *cyclops_cfg)
         snprintf(param_val_buf, sizeof(param_val_buf), "%llu", param_val);
         wl_set_param(ps->wl, ps->wl_param_key, param_val_buf);
 
-        run_batch(batch_data, false, i);
+        run_batch(batch_data, i);
 
         /* extract aggregate batch data for each metric */
         for (int m = 0; m < ps->mg->n_metrics; m++) {

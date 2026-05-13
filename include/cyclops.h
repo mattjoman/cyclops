@@ -1,6 +1,8 @@
 #ifndef CYCLOPS_H
 #define CYCLOPS_H
 
+#include <stdbool.h>
+
 #define MAX_BATCH_RUNS 100
 #define MAX_PERF_COUNTERS 15
 #define MAX_PERF_RATIOS 15
@@ -67,7 +69,8 @@ typedef struct {
     char *ps_wl_param_low;
     char *ps_wl_param_high;
     char *ps_wl_param_step;
-    char *file_name;
+    bool batch_csv;
+    bool param_sweep_csv;
 } cyclops_cfg_t;
 
 #endif
