@@ -14,11 +14,28 @@ static const char help_text[] =
 "\n"
 "Options:\n\n"
 "  -h, --help                       Display this message\n"
+"\n"
 "  -w, --workload WORKLOAD          Select workload to benchmark\n"
+"\n"
 "  -m, --metric-group GROUP         Select a group of metrics to record\n"
+"\n"
 "  -r, --batch-runs RUNS            Number of runs in the batch\n"
+"\n"
 "  -u, --warmup-runs RUNS           Number of warmup runs\n"
-"  -o, --output-file FILENAME       Output batch results to a CSV file\n"
+"\n"
+"  -p, --param KEY=VAL              Set a custom workload parameter for the\n"
+"                                   batch(es)\n"
+"\n"
+"  -s, --param-sweep KEY=LOW:HIGH:STEP\n"
+"                                   Sweep the selected workload parameter\n"
+"                                   through a range of values (one batch\n"
+"                                   will be run for each param value)\n"
+"\n"
+"  --batch-csv                      Write run-level data to csv files for\n"
+"                                   each batch\n"
+"\n"
+"  --param-sweep-csv                Write aggregated batch data to\n"
+"                                   'param_sweep.csv'\n"
 "\n";
 
 #define MAX_WL_ARGS 5
@@ -32,7 +49,6 @@ int main(int argc, char *argv[])
 {
     char *workload_str = NULL;
     char *metric_grp_str  = NULL;
-    char *file_name = NULL;
     unsigned long long batch_runs = 1;
     unsigned long long warmup_runs = 0;
     int n_wl_params = 0;
@@ -68,7 +84,7 @@ int main(int argc, char *argv[])
     char *eq;
     char *colon_1;
     char *colon_2;
-    while ((opt = getopt_long(argc, argv, "hw:m:r:u:o:p:s:", long_opts, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "hw:m:r:u:p:s:", long_opts, NULL)) != -1) {
         switch (opt) {
             case 'h':
                 fputs(help_text, stdout);
@@ -86,9 +102,6 @@ int main(int argc, char *argv[])
                 break;
             case 'u':
                 warmup_runs = strtoull(optarg, NULL, 10);
-                break;
-            case 'o':
-                file_name = optarg;
                 break;
             case 'p':
                 if (n_wl_params >= MAX_WL_ARGS) {
