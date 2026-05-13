@@ -1,5 +1,5 @@
-#ifndef MICROBENCH_H
-#define MICROBENCH_H
+#ifndef CYCLOPS_H
+#define CYCLOPS_H
 
 #define MAX_BATCH_RUNS 100
 #define MAX_PERF_COUNTERS 15

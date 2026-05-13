@@ -1,9 +1,9 @@
-#ifndef METRIC_H
-#define METRIC_H
+#ifndef METRIC_GRP_H
+#define METRIC_GRP_H
 
 #include <stdint.h>
 
-#include "./microbench.h"
+#include "./cyclops.h"
 #include "./experiment.h"
 
 typedef enum {

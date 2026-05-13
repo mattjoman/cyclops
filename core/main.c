@@ -3,7 +3,7 @@
 #include <string.h>
 #include <getopt.h>
 
-#include "../include/microbench.h"
+#include "../include/cyclops.h"
 #include "../include/experiment.h"
 #include "../include/workload.h"
 #include "../include/metric_grp.h"

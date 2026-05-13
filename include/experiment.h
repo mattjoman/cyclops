@@ -1,7 +1,7 @@
-#ifndef BATCH_H
-#define BATCH_H
+#ifndef EXPERIMENT_H
+#define EXPERIMENT_H
 
-#include "./microbench.h"
+#include "./cyclops.h"
 #include "./metric_grp.h"
 #include "./workload.h"
 
