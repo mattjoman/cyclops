@@ -1,29 +1,7 @@
-# Cyclops
+# Cyclops README
 
-## Project Overview
-
-**Cyclops** is a framework for investigating CPU behaviour/architecture and
-custom code performance.
-
-It allows the user to create experiments using low-level resources like PMU
-counters and `rdtscp`, with sensible implementations to improve avoid pitfalls.
-**Cyclops** makes it easy to design reproducible and accurate experiments that
-can be easily orchestrated from the command line and visualised to gain
-insights.
-
-## Features
-
-- Batches with user-defined warmup runs, batch runs and aggregation
-- Workload plugin system to easily write custom workloads with scriptable
-  workload parameters (see `docs/workload.md`)
-- Parameter sweeps to run multiple batches while varying one parameter and
-  keeping the others fixed
-- Metric groups including raw metrics like PMU counters (`perf_event_open()`)
-  and `rdtscp`, and ratios like IPC (see `docs/metrics.md` for measurement
-  methodology)
-- Results are written to stdout & CSV files with metadata for reproducibility
-- Python scripts for running and visualising some default experiments - see
-  `experiments/`
+**Cyclops** is a tool for investigating and reverse-engineering CPU
+architecture and behaviour.
 
 ## Build and Run
 
@@ -40,6 +18,38 @@ make
 # run (generate help text)
 ./cyclops -h
 ```
+
+## What Makes Cyclops Powerful
+
+### Workloads
+
+- Choose from a range of built-in workloads to put targeted pressure on the CPU
+- Create custom workloads using the workload plugin system
+- Configure workloads at runtime from the command line with workload params
+
+### Metric Groups
+
+- Record groups of metrics while the workload runs (e.g. PMU data with
+  `perf_event_open()` and TSC data with `rdtscp`)
+- Sensible setup by default to improve accuracy and reproducibility (e.g.
+  pinning the thread and excluding the kernel from PMU data)
+- Metric groups can include derived metrics like instructions per cycls (IPC)
+
+### Run Experiments with One Command
+
+- Run a single batch, setting number of warmup runs, recorded batch runs, and
+  any workload params
+- Run many batches, sweeping through a range of workload param values while
+  keeping the others constant, with a single command
+    - This makes it quick and easy to explore parameter spaces
+
+### Visualise Experiments with CSV Output
+
+- Param sweeps will create a CSV file with various aggregate values, for each
+  metric, for each batch
+    - This makes it easy to create plots of recorded data vs param-values
+- Optionally, unaggregated run-level data for each metric and batch can also
+  be written to CSV files
 
 ## Example Usage
 
@@ -102,4 +112,4 @@ python3 branch.py
 Figures (png) will be saved in `experiments/`.
 
 See [my website](https://matthewpenney.net) for investigations and writeups
-using **Cyclops**:
+using **Cyclops**.
