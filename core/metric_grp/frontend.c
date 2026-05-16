@@ -230,6 +230,11 @@ void register_metric_grp(metric_grp_t *mg)
     mg_registry.registry[mg_registry.n_registered++] = mg;
 }
 
+MetricGrpRegistry *mg_registry_get_registry()
+{
+    return &mg_registry;
+}
+
 const metric_t *get_metric_by_id(metric_id_t id)
 {
     return &metrics[id];

@@ -42,6 +42,8 @@ typedef struct mg_array {
     metric_grp_t **registry;
 } MetricGrpRegistry;
 
+MetricGrpRegistry *mg_registry_get_registry(void);
+
 void register_metric_grp(metric_grp_t *mg);
 
 #define REGISTER_MG(mg_ptr) \
