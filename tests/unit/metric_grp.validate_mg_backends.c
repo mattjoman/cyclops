@@ -5,7 +5,7 @@
 
 int main()
 {
-    MetricGrpRegistry *mg_registry = mg_registry_get_registry();
+    metric_grp_registry *mg_registry = mg_registry_get_registry();
     assert(mg_registry != NULL);
 
     for (size_t i = 0; i < mg_registry->n_registered; i++) {

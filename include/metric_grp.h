@@ -37,12 +37,12 @@ typedef struct metric_grp {
 } metric_grp_t;
 
 // TODO: make a generic registry class?
-typedef struct mg_array {
+typedef struct {
     size_t n_registered;
     metric_grp_t **registry;
-} MetricGrpRegistry;
+} metric_grp_registry;
 
-MetricGrpRegistry *mg_registry_get_registry(void);
+metric_grp_registry *mg_registry_get_registry(void);
 
 void register_metric_grp(metric_grp_t *mg);
 
@@ -60,6 +60,7 @@ metric_grp_t *get_mg_by_name(const char *name);
 int mg_n_raw(metric_grp_t *mg);
 int mg_n_derived(metric_grp_t *mg);
 
+// TODO: move print_metric_grp_guide() to core/cli.c
 void print_metric_grp_guide(void);
 
 /** METRIC BACKEND ***/

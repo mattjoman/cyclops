@@ -218,7 +218,7 @@ const metric_t metrics[N_METRICS] = {
     },
 };
 
-static MetricGrpRegistry mg_registry = {
+static metric_grp_registry mg_registry = {
     .n_registered = 0,
 };
 
@@ -230,7 +230,7 @@ void register_metric_grp(metric_grp_t *mg)
     mg_registry.registry[mg_registry.n_registered++] = mg;
 }
 
-MetricGrpRegistry *mg_registry_get_registry()
+metric_grp_registry *mg_registry_get_registry()
 {
     return &mg_registry;
 }
