@@ -40,8 +40,8 @@ batch_t *batch_init(cyclops_cfg_t *cyclops_cfg)
     b->wl            = wl;
     b->mg            = mg;
 
-    b->n_raw = mg_n_raw(mg);
-    b->n_derived = mg_n_derived(mg);
+    b->n_raw = mg_n_metrics_by_type(mg, METRIC_TYPE_RAW);
+    b->n_derived = mg_n_metrics_by_type(mg, METRIC_TYPE_DERIVED);
     b->to_csv = cyclops_cfg->batch_csv;
 
     assert(b->n_raw > 0);

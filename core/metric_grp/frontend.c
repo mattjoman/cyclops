@@ -240,28 +240,16 @@ const metric_t *metric_get_by_id(metric_id_t id)
     return &metrics[id];
 }
 
-int mg_n_raw(metric_grp_t *mg)
+int mg_n_metrics_by_type(metric_grp_t *mg, metric_type_t type)
 {
-    int raw_counter = 0;
+    int counter = 0;
     for (int i = 0; i < mg->n_metrics; i++) {
         const metric_t *m = metric_get_by_id(mg->metrics[i]);
-        if (m->type == METRIC_TYPE_RAW) {
-            raw_counter++;
+        if (m->type == type) {
+            counter++;
         }
     }
-    return raw_counter;
-}
-
-int mg_n_derived(metric_grp_t *mg)
-{
-    int derived_counter = 0;
-    for (int i = 0; i < mg->n_metrics; i++) {
-        const metric_t *m = metric_get_by_id(mg->metrics[i]);
-        if (m->type == METRIC_TYPE_DERIVED) {
-            derived_counter++;
-        }
-    }
-    return derived_counter;
+    return counter;
 }
 
 metric_id_t mg_get_nth_metric_id(metric_grp_t *mg,

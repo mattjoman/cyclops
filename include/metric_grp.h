@@ -59,8 +59,7 @@ metric_id_t mg_get_nth_metric_id(metric_grp_t *mg,
 
 metric_grp_t *mg_get_by_name(const char *name);
 
-int mg_n_raw(metric_grp_t *mg);
-int mg_n_derived(metric_grp_t *mg);
+int mg_n_metrics_by_type(metric_grp_t *mg, metric_type_t type);
 
 // TODO: move print_metric_grp_guide() to core/cli.c
 void print_metric_grp_guide(void);
