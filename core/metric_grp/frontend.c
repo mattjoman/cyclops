@@ -264,41 +264,24 @@ int mg_n_derived(metric_grp_t *mg)
     return derived_counter;
 }
 
-metric_id_t mg_get_nth_raw_id(metric_grp_t *mg, int n)
+metric_id_t mg_get_nth_metric_id(metric_grp_t *mg,
+                                 int n,
+                                 metric_type_t type)
 {
-    int raw_counter = 0;
+    int counter = 0;
     for (int i = 0; i < mg->n_metrics; i++) {
 
         const metric_t *m = metric_get_by_id(mg->metrics[i]);
 
-        if (m->type == METRIC_TYPE_RAW) {
-            if (raw_counter == n) {
+        if (m->type == type) {
+            if (counter == n) {
                 return mg->metrics[i];
             } else {
-                raw_counter++;
+                counter++;
             }
         }
     }
-    fprintf(stderr, "Couldn't find nth raw metric id\n");
-    exit(1);
-}
-
-metric_id_t mg_get_nth_derived_id(metric_grp_t *mg, int n)
-{
-    int derived_counter = 0;
-    for (int i = 0; i < mg->n_metrics; i++) {
-
-        const metric_t *m = metric_get_by_id(mg->metrics[i]);
-
-        if (m->type == METRIC_TYPE_DERIVED) {
-            if (derived_counter == n) {
-                return mg->metrics[i];
-            } else {
-                derived_counter++;
-            }
-        }
-    }
-    fprintf(stderr, "Couldn't find nth derived metric id\n");
+    fprintf(stderr, "Couldn't find nth metric id\n");
     exit(1);
 }
 

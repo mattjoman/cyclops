@@ -53,7 +53,9 @@ void register_metric_grp(metric_grp_t *mg);
 
 const metric_t *metric_get_by_id(metric_id_t id);
 metric_id_t mg_get_nth_raw_id(metric_grp_t *mg, int n);
-metric_id_t mg_get_nth_derived_id(metric_grp_t *mg, int n);
+metric_id_t mg_get_nth_metric_id(metric_grp_t *mg,
+                                 int n,
+                                 metric_type_t type);
 
 metric_grp_t *mg_get_by_name(const char *name);
 

@@ -63,12 +63,14 @@ batch_t *batch_init(cyclops_cfg_t *cyclops_cfg)
 
     for (int i = 0; i < b->n_raw; i++) {
         b->raw_data[i].run_vals = alloc_double_array(b->batch_runs);
-        b->raw_data[i].metric_id = mg_get_nth_raw_id(mg, i);
+        b->raw_data[i].metric_id = mg_get_nth_metric_id(mg, i,
+                                                            METRIC_TYPE_RAW);
     }
 
     for (int i = 0; i < b->n_derived; i++) {
         b->derived_data[i].run_vals = alloc_double_array(b->batch_runs);
-        b->derived_data[i].metric_id = mg_get_nth_derived_id(mg, i);
+        b->derived_data[i].metric_id = mg_get_nth_metric_id(mg, i,
+                                                        METRIC_TYPE_DERIVED);
     }
 
     return b;
