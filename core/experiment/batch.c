@@ -99,7 +99,7 @@ void destroy_batch_data(batch_t *data)
     data = NULL;
 }
 
-static void process_perf_counter_data(batch_t *batch_data)
+static void batch_process_raw_metric_data(batch_t *batch_data)
 {
     batch_data->raw_data_scaling.agg = aggregate_double(
                 batch_data->raw_data_scaling.run_vals,
@@ -112,7 +112,7 @@ static void process_perf_counter_data(batch_t *batch_data)
     }
 }
 
-static void process_perf_ratio_data(batch_t *bd)
+static void batch_process_derived_metric_data(batch_t *bd)
 {
     for (int i = 0; i < bd->n_derived; i++) {
 
@@ -152,8 +152,8 @@ void run_batch(batch_t *batch_data,
     backend->bench_func(batch_data, batch_data->wl->workload);
     batch_data->wl->clean();
 
-    process_perf_counter_data(batch_data);
-    process_perf_ratio_data(batch_data);
+    batch_process_raw_metric_data(batch_data);
+    batch_process_derived_metric_data(batch_data);
 
     if (batch_data->to_csv) {
         batch_to_csv(batch_data, batch_no);
