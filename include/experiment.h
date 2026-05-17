@@ -50,7 +50,7 @@ typedef struct {
 } ps_batch_data_t;
 
 typedef struct {
-    metric_id_t metric_id;
+    const metric_t *metric;
     ps_batch_data_t *batch_vals;
 } ps_data_t;
 

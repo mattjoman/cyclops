@@ -188,7 +188,7 @@ void param_sweep_to_csv(param_sweep_t *ps)
     /* column headers */
     fprintf(file, "%s,", ps->wl_param_key);
     for (int i = 0; i < ps->mg->n_metrics; i++) {
-        const metric_t *m = metric_get_by_id(ps->data[i].metric_id);
+        const metric_t *m = ps->data[i].metric;
 
         fprintf(file, "%s:MIN,%s:MAX,%s:MEDIAN,",
                 m->name,

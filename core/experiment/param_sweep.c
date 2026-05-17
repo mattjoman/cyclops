@@ -67,7 +67,7 @@ static param_sweep_t *param_sweep_init(cyclops_cfg_t *cyclops_cfg)
             exit(1);
         }
 
-        ps->data[i].metric_id = mg->metrics[i];
+        ps->data[i].metric = metric_get_by_id(mg->metrics[i]);
     }
 
     return ps;
@@ -125,7 +125,8 @@ void param_sweep_run(cyclops_cfg_t *cyclops_cfg)
         /* extract aggregate batch data for each metric */
         for (int m = 0; m < ps->mg->n_metrics; m++) {
             metric_data_t *batch_metric_data = batch_get_metric_data(
-                                            batch_data, ps->data[m].metric_id);
+                                                    batch_data,
+                                                    ps->data[m].metric->id);
             assert(batch_metric_data);
             ps->data[m].batch_vals[i].agg = batch_metric_data->agg;
             ps->data[m].batch_vals[i].param_sweep_val = param_val;
