@@ -82,6 +82,9 @@ static void param_sweep_destroy(param_sweep_t *ps)
 
     free(ps->data);
     ps->data = NULL;
+
+    free(ps);
+    ps = NULL;
 }
 
 /* n is zero-based */
