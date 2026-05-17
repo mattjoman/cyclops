@@ -135,7 +135,7 @@ static void batch_process_derived_metric_data(batch_t *b)
     for (int i = 0; i < b->n_derived; i++) {
 
         ratio = &b->derived_data[i];
-        const metric_t *m = get_metric_by_id(ratio->metric_id);
+        const metric_t *m = metric_get_by_id(ratio->metric_id);
 
         numerator = batch_get_metric_data(b, m->numerator);
         denominator = batch_get_metric_data(b, m->denominator);

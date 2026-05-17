@@ -71,13 +71,13 @@ void run_report(batch_t *batch_data)
     print_double_agg_table_row(batch_data->raw_data_scaling.agg, "SCALING");
 
     for (int i = 0; i < batch_data->n_raw; i++) {
-        const metric_t *m = get_metric_by_id(
+        const metric_t *m = metric_get_by_id(
                                             batch_data->raw_data[i].metric_id);
         print_double_agg_table_row(batch_data->raw_data[i].agg, m->name);
     }
 
     for (int i = 0; i < batch_data->n_derived; i++) {
-        const metric_t *m = get_metric_by_id(
+        const metric_t *m = metric_get_by_id(
                                         batch_data->derived_data[i].metric_id);
         print_double_agg_table_row(batch_data->derived_data[i].agg, m->name);
     }
@@ -108,14 +108,14 @@ static void write_full_batch(FILE *file, batch_t *batch_data)
     /* raw data column names */
     fprintf(file, "%s,", "SCALING");
     for (int i = 0; i < batch_data->n_raw; i++) {
-        const metric_t *m = get_metric_by_id(
+        const metric_t *m = metric_get_by_id(
                                             batch_data->raw_data[i].metric_id);
         fprintf(file, "%s,", m->name);
     }
 
     /* derived data column names */
     for (int i = 0; i < batch_data->n_derived; i++) {
-        const metric_t *m = get_metric_by_id(
+        const metric_t *m = metric_get_by_id(
                                         batch_data->derived_data[i].metric_id);
         fprintf(file, "%s,", m->name);
     }
@@ -192,7 +192,7 @@ void param_sweep_to_csv(param_sweep_t *ps)
     /* column headers */
     fprintf(file, "%s,", ps->wl_param_key);
     for (int i = 0; i < ps->mg->n_metrics; i++) {
-        const metric_t *m = get_metric_by_id(ps->data[i].metric_id);
+        const metric_t *m = metric_get_by_id(ps->data[i].metric_id);
 
         fprintf(file, "%s:MIN,%s:MAX,%s:MEDIAN,",
                 m->name,

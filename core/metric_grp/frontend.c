@@ -235,7 +235,7 @@ metric_grp_registry *mg_registry_get_registry()
     return &mg_registry;
 }
 
-const metric_t *get_metric_by_id(metric_id_t id)
+const metric_t *metric_get_by_id(metric_id_t id)
 {
     return &metrics[id];
 }
@@ -244,7 +244,7 @@ int mg_n_raw(metric_grp_t *mg)
 {
     int raw_counter = 0;
     for (int i = 0; i < mg->n_metrics; i++) {
-        const metric_t *m = get_metric_by_id(mg->metrics[i]);
+        const metric_t *m = metric_get_by_id(mg->metrics[i]);
         if (m->type == METRIC_TYPE_RAW) {
             raw_counter++;
         }
@@ -256,7 +256,7 @@ int mg_n_derived(metric_grp_t *mg)
 {
     int derived_counter = 0;
     for (int i = 0; i < mg->n_metrics; i++) {
-        const metric_t *m = get_metric_by_id(mg->metrics[i]);
+        const metric_t *m = metric_get_by_id(mg->metrics[i]);
         if (m->type == METRIC_TYPE_DERIVED) {
             derived_counter++;
         }
@@ -269,7 +269,7 @@ metric_id_t mg_get_nth_raw_id(metric_grp_t *mg, int n)
     int raw_counter = 0;
     for (int i = 0; i < mg->n_metrics; i++) {
 
-        const metric_t *m = get_metric_by_id(mg->metrics[i]);
+        const metric_t *m = metric_get_by_id(mg->metrics[i]);
 
         if (m->type == METRIC_TYPE_RAW) {
             if (raw_counter == n) {
@@ -288,7 +288,7 @@ metric_id_t mg_get_nth_derived_id(metric_grp_t *mg, int n)
     int derived_counter = 0;
     for (int i = 0; i < mg->n_metrics; i++) {
 
-        const metric_t *m = get_metric_by_id(mg->metrics[i]);
+        const metric_t *m = metric_get_by_id(mg->metrics[i]);
 
         if (m->type == METRIC_TYPE_DERIVED) {
             if (derived_counter == n) {
