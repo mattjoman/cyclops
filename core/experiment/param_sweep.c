@@ -26,7 +26,7 @@ static unsigned long long ps_n_batches(param_sweep_t *ps)
     return (diff / step) + 1;
 }
 
-static param_sweep_t *init_param_sweep(cyclops_cfg_t *cyclops_cfg)
+static param_sweep_t *param_sweep_init(cyclops_cfg_t *cyclops_cfg)
 {
     param_sweep_t *ps = NULL;
     if (!(ps = calloc(1, sizeof(param_sweep_t)))) {
@@ -100,7 +100,7 @@ static unsigned long long ps_get_nth_param_val(param_sweep_t *ps,
 
 void param_sweep_run(cyclops_cfg_t *cyclops_cfg)
 {
-    param_sweep_t *ps = init_param_sweep(cyclops_cfg);
+    param_sweep_t *ps = param_sweep_init(cyclops_cfg);
 
     static char param_val_buf[64];
     unsigned long long param_val;
