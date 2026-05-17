@@ -61,7 +61,7 @@ UNIT_TEST_SRCS := $(wildcard tests/unit/*.c)
 UNIT_TEST_BINS := $(patsubst tests/unit/%.c,tests/unit/%.out,$(UNIT_TEST_SRCS))
 
 # Default target
-all: $(APP_BIN)
+all: $(APP_BIN) $(UNIT_TEST_BINS)
 
 # Build modes
 debug: CFLAGS := $(DEBUG_CFLAGS) -Iinclude
