@@ -152,8 +152,7 @@ static void batch_process_derived_metric_data(batch_t *b)
     }
 }
 
-void run_batch(batch_t *batch_data,
-               unsigned long long batch_no)
+static void batch_run(batch_t *batch_data, unsigned long long batch_no)
 {
     const metric_backend_t *backend = get_backend(batch_data->mg->backend);
 
@@ -173,6 +172,11 @@ void run_batch(batch_t *batch_data,
 void batch_single_run(cyclops_cfg_t *cyclops_cfg)
 {
     batch_t *batch = init_batch_data(cyclops_cfg);
-    run_batch(batch, 0);
+    batch_run(batch, 0);
     destroy_batch_data(batch);
+}
+
+void batch_param_sweep_run(batch_t *b, unsigned long long batch_no)
+{
+    batch_run(b, batch_no);
 }

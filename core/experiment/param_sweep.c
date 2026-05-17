@@ -117,7 +117,7 @@ void param_sweep_run(cyclops_cfg_t *cyclops_cfg)
         snprintf(param_val_buf, sizeof(param_val_buf), "%llu", param_val);
         wl_set_param(ps->wl, ps->wl_param_key, param_val_buf);
 
-        run_batch(batch_data, i);
+        batch_param_sweep_run(batch_data, i);
 
         /* extract aggregate batch data for each metric */
         for (int m = 0; m < ps->mg->n_metrics; m++) {
