@@ -73,7 +73,7 @@ static param_sweep_t *param_sweep_init(cyclops_cfg_t *cyclops_cfg)
     return ps;
 }
 
-static void destroy_param_sweep(param_sweep_t *ps)
+static void param_sweep_destroy(param_sweep_t *ps)
 {
     for (int i = 0; i < ps->mg->n_metrics; i++) {
         free(ps->data[i].batch_vals);
@@ -135,5 +135,5 @@ void param_sweep_run(cyclops_cfg_t *cyclops_cfg)
     param_sweep_to_csv(ps);
 
     /* clean up */
-    destroy_param_sweep(ps);
+    param_sweep_destroy(ps);
 }
