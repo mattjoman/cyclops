@@ -102,6 +102,23 @@ static unsigned long long ps_get_nth_param_val(param_sweep_t *ps,
     return low + (n * step);
 }
 
+static void ps_set_batch_vals(param_sweep_t *ps, batch_t *b,
+                              unsigned long long batch_num,
+                              unsigned long long param_val)
+{
+    int metric_num;
+    for (metric_num = 0; metric_num < ps->mg->n_metrics; metric_num++) {
+        param_sweep_metric_t *ps_metric = &ps->metrics[metric_num];
+        batch_metric_t *batch_metric = batch_get_batch_metric_by_id(b,
+                                                ps_metric->metric->id);
+
+        assert(batch_metric);
+
+        ps_metric->batch_vals[batch_num].agg = batch_metric->agg;
+        ps_metric->batch_vals[batch_num].param_sweep_val = param_val;
+    }
+}
+
 void ps_run(cyclops_cfg_t *cyclops_cfg)
 {
     param_sweep_t *ps = ps_init(cyclops_cfg);
@@ -109,7 +126,8 @@ void ps_run(cyclops_cfg_t *cyclops_cfg)
     static char param_val_buf[64];
     unsigned long long param_val;
 
-    for (unsigned long long i = 0; i < ps->n_batches; i++) {
+    unsigned long long batch_num;
+    for (batch_num = 0; batch_num < ps->n_batches; batch_num++) {
 
         batch_t *b = batch_init(cyclops_cfg);
 
@@ -117,23 +135,13 @@ void ps_run(cyclops_cfg_t *cyclops_cfg)
          * must set param to current sweep value after calling
          * batch_init(), not before
          */
-        param_val = ps_get_nth_param_val(ps, i);
+        param_val = ps_get_nth_param_val(ps, batch_num);
         snprintf(param_val_buf, sizeof(param_val_buf), "%llu", param_val);
         wl_set_param(ps->wl, ps->wl_param_key, param_val_buf);
 
-        batch_param_sweep_run(b, i);
+        batch_param_sweep_run(b, batch_num);
 
-        /* extract aggregate batch data for each metric */
-        for (int m = 0; m < ps->mg->n_metrics; m++) {
-            param_sweep_metric_t *ps_metric = &ps->metrics[m];
-            batch_metric_t *batch_metric = batch_get_batch_metric_by_id(b,
-                                                    ps_metric->metric->id);
-
-            assert(batch_metric);
-
-            ps_metric->batch_vals[i].agg = batch_metric->agg;
-            ps_metric->batch_vals[i].param_sweep_val = param_val;
-        }
+        ps_set_batch_vals(ps, b, batch_num, param_val);
 
         batch_destroy(b);
     }
