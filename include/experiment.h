@@ -47,11 +47,11 @@ void batch_single_run(cyclops_cfg_t *cyclops_cfg);
 typedef struct {
     unsigned long long param_sweep_val;
     double_agg_t agg;
-} ps_batch_data_t;
+} param_sweep_batch_val_t;
 
 typedef struct {
     const metric_t *metric;
-    ps_batch_data_t *batch_vals;
+    param_sweep_batch_val_t *batch_vals;
 } ps_data_t;
 
 typedef struct {

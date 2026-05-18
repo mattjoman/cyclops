@@ -204,7 +204,7 @@ void param_sweep_to_csv(param_sweep_t *ps)
     /* write aggregate values for each batch */
     for (unsigned long long b = 0; b < ps->n_batches; b++) {
         for (int i = 0; i < ps->mg->n_metrics; i++) {
-            ps_batch_data_t *batch = &ps->data[i].batch_vals[b];
+            param_sweep_batch_val_t *batch = &ps->data[i].batch_vals[b];
             fprintf(file,
                     "%llu,%.6f,%.6f,%.6f",
                     batch->param_sweep_val,
