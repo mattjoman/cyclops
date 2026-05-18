@@ -38,9 +38,9 @@ static param_sweep_t *ps_init(cyclops_cfg_t *cyclops_cfg)
     workload_t *wl = wl_get_by_name(cyclops_cfg->wl_name);
 
     for (int i = 0; i < cyclops_cfg->n_wl_params; i++) {
-        wl_set_param(wl,
-                     cyclops_cfg->wl_param_keys[i],
-                     cyclops_cfg->wl_param_args[i]);
+        wl_set_param_val(wl,
+                         cyclops_cfg->wl_param_keys[i],
+                         cyclops_cfg->wl_param_args[i]);
     }
 
     ps->wl = wl;
@@ -139,7 +139,7 @@ void ps_run(cyclops_cfg_t *cyclops_cfg)
          */
         param_val = ps_get_nth_param_val(ps, batch_num);
         snprintf(param_val_buf, sizeof(param_val_buf), "%llu", param_val);
-        wl_set_param(ps->wl, ps->wl_param_key, param_val_buf);
+        wl_set_param_val(ps->wl, ps->wl_param_key, param_val_buf);
 
         batch_param_sweep_run(b, batch_num);
 

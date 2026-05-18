@@ -31,6 +31,6 @@ void print_workload_guide(void);
 workload_t *wl_get_by_name(const char *name);
 
 unsigned long long wl_get_param_val(workload_t *wl, const char *key);
-void wl_set_param(workload_t *wl, const char *key, const char *arg);
+void wl_set_param_val(workload_t *wl, const char *key, const char *arg);
 
 #endif

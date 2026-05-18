@@ -59,7 +59,7 @@ unsigned long long wl_get_param_val(workload_t *wl, const char *key)
     return 0;
 }
 
-void wl_set_param(workload_t *wl, const char *key, const char *arg)
+void wl_set_param_val(workload_t *wl, const char *key, const char *arg)
 {
     if (!wl->params) {
         fprintf(stderr, "Workload has no parameters\n");
