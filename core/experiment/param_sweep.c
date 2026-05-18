@@ -54,8 +54,8 @@ static param_sweep_t *param_sweep_init(cyclops_cfg_t *cyclops_cfg)
     ps->n_batches = ps_n_batches(ps);
     ps->to_csv = cyclops_cfg->param_sweep_csv;
 
-    if (!(ps->data = calloc(mg->n_metrics, sizeof(ps_data_t)))) {
-        perror("Failed to allocate memory for ps_data_t array");
+    if (!(ps->data = calloc(mg->n_metrics, sizeof(param_sweep_metric_t)))) {
+        perror("Failed to allocate memory for param_sweep_metric_t array");
         exit(1);
     }
 

@@ -52,7 +52,7 @@ typedef struct {
 typedef struct {
     const metric_t *metric;
     param_sweep_batch_val_t *batch_vals;
-} ps_data_t;
+} param_sweep_metric_t;
 
 typedef struct {
 
@@ -67,7 +67,7 @@ typedef struct {
     char *wl_param_step;
 
     unsigned long long n_batches;
-    ps_data_t *data;
+    param_sweep_metric_t *data;
 
     bool to_csv;
 } param_sweep_t;
