@@ -67,7 +67,7 @@ typedef struct {
     char *wl_param_step;
 
     unsigned long long n_batches;
-    param_sweep_metric_t *data;
+    param_sweep_metric_t *metrics;
 
     bool to_csv;
 } param_sweep_t;

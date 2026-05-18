@@ -192,7 +192,7 @@ void param_sweep_to_csv(param_sweep_t *ps)
     /* column headers */
     fprintf(file, "%s,", ps->wl_param_key);
     for (int i = 0; i < ps->mg->n_metrics; i++) {
-        const metric_t *m = ps->data[i].metric;
+        const metric_t *m = ps->metrics[i].metric;
 
         fprintf(file, "%s:MIN,%s:MAX,%s:MEDIAN,",
                 m->name,
@@ -204,7 +204,7 @@ void param_sweep_to_csv(param_sweep_t *ps)
     /* write aggregate values for each batch */
     for (unsigned long long b = 0; b < ps->n_batches; b++) {
         for (int i = 0; i < ps->mg->n_metrics; i++) {
-            param_sweep_batch_val_t *batch = &ps->data[i].batch_vals[b];
+            param_sweep_batch_val_t *batch = &ps->metrics[i].batch_vals[b];
             fprintf(file,
                     "%llu,%.6f,%.6f,%.6f",
                     batch->param_sweep_val,

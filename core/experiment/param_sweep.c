@@ -54,20 +54,21 @@ static param_sweep_t *param_sweep_init(cyclops_cfg_t *cyclops_cfg)
     ps->n_batches = ps_n_batches(ps);
     ps->to_csv = cyclops_cfg->param_sweep_csv;
 
-    if (!(ps->data = calloc(mg->n_metrics, sizeof(param_sweep_metric_t)))) {
+    if (!(ps->metrics = calloc(mg->n_metrics, sizeof(param_sweep_metric_t)))) {
         perror("Failed to allocate memory for param_sweep_metric_t array");
         exit(1);
     }
 
     for (int i = 0; i < mg->n_metrics; i++) {
-        ps->data[i].batch_vals = calloc(ps->n_batches,
-                                        sizeof(param_sweep_batch_val_t));
-        if (!ps->data[i].batch_vals) {
-            perror("Failed to allocate memory for ps_batch_data array");
+        ps->metrics[i].batch_vals = calloc(ps->n_batches,
+                                           sizeof(param_sweep_batch_val_t));
+        if (!ps->metrics[i].batch_vals) {
+            perror("Failed to allocate memory for "
+                                                "param_sweep_batch_val array");
             exit(1);
         }
 
-        ps->data[i].metric = metric_get_by_id(mg->metrics[i]);
+        ps->metrics[i].metric = metric_get_by_id(mg->metrics[i]);
     }
 
     return ps;
@@ -76,12 +77,12 @@ static param_sweep_t *param_sweep_init(cyclops_cfg_t *cyclops_cfg)
 static void param_sweep_destroy(param_sweep_t *ps)
 {
     for (int i = 0; i < ps->mg->n_metrics; i++) {
-        free(ps->data[i].batch_vals);
-        ps->data[i].batch_vals = NULL;
+        free(ps->metrics[i].batch_vals);
+        ps->metrics[i].batch_vals = NULL;
     }
 
-    free(ps->data);
-    ps->data = NULL;
+    free(ps->metrics);
+    ps->metrics = NULL;
 
     free(ps);
     ps = NULL;
@@ -126,10 +127,10 @@ void param_sweep_run(cyclops_cfg_t *cyclops_cfg)
         for (int m = 0; m < ps->mg->n_metrics; m++) {
             batch_metric_t *batch_metric_data = batch_get_batch_metric_by_id(
                                                     batch_data,
-                                                    ps->data[m].metric->id);
+                                                    ps->metrics[m].metric->id);
             assert(batch_metric_data);
-            ps->data[m].batch_vals[i].agg = batch_metric_data->agg;
-            ps->data[m].batch_vals[i].param_sweep_val = param_val;
+            ps->metrics[m].batch_vals[i].agg = batch_metric_data->agg;
+            ps->metrics[m].batch_vals[i].param_sweep_val = param_val;
         }
 
         destroy_batch_data(batch_data);
