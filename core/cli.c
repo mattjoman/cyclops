@@ -11,8 +11,8 @@
 #define MAX_WL_ARGS 5
 
 enum {
-    OPT_BATCH_CSV = 256,
-    OPT_PARAM_SWEEP_CSV = 257,
+    OPT_CSV = 256,
+    OPT_CSV_ALL = 257,
 };
 
 static struct option long_opts[] = {
@@ -25,8 +25,8 @@ static struct option long_opts[] = {
     {"param-sweep", required_argument, 0, 's'},
 
     /* long opts only */
-    {"batch-csv", no_argument, 0, OPT_BATCH_CSV},
-    {"param-sweep-csv", no_argument, 0, OPT_PARAM_SWEEP_CSV},
+    {"csv", no_argument, 0, OPT_CSV},
+    {"csv-all", no_argument, 0, OPT_CSV_ALL},
 
     {0, 0, 0, 0}
 };
@@ -47,8 +47,8 @@ cyclops_cfg_t *cli_cfg_init(int argc, char *argv[])
     static char *wl_param_sweep_high = NULL;
     static char *wl_param_sweep_step = NULL;
 
-    bool batch_csv = false;
-    bool param_sweep_csv = false;
+    bool csv = false;
+    bool csv_all = false;
 
     int opt;
     char *key;
@@ -122,11 +122,11 @@ cyclops_cfg_t *cli_cfg_init(int argc, char *argv[])
                 colon_2 = NULL;
 
                 break;
-            case OPT_BATCH_CSV:
-                batch_csv = true;
+            case OPT_CSV:
+                csv = true;
                 break;
-            case OPT_PARAM_SWEEP_CSV:
-                param_sweep_csv = true;
+            case OPT_CSV_ALL:
+                csv_all = true;
                 break;
             default:
                 fprintf(stderr, "Usage 1\n");
@@ -152,8 +152,16 @@ cyclops_cfg_t *cli_cfg_init(int argc, char *argv[])
     cfg->ps_wl_param_low = wl_param_sweep_low;
     cfg->ps_wl_param_high = wl_param_sweep_high;
     cfg->ps_wl_param_step = wl_param_sweep_step;
-    cfg->batch_csv = batch_csv;
-    cfg->param_sweep_csv = param_sweep_csv;
+
+    if (csv_all) {
+        cfg->param_sweep_csv = true;
+        cfg->batch_csv = true;
+    } else if (csv && wl_param_sweep_key) {
+        cfg->param_sweep_csv = true;
+        cfg->batch_csv = false;
+    } else if (csv) {
+        cfg->batch_csv = true;
+    }
 
     return cfg;
 }
