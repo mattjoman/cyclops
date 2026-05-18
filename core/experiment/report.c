@@ -169,11 +169,12 @@ static void ps_write_metadata(FILE *file, param_sweep_t *ps)
             ps->wl_param_step);
 
     for (int i = 0; i < ps->wl->n_params; i++) {
-        if (strcmp(ps->wl->params[i].key, ps->wl_param_key) != 0) {
+        wl_param_t *wl_param = &ps->wl->params[i];
+        if (strcmp(wl_param->key, ps->wl_param_key) != 0) {
             fprintf(file,
                     " -p %s=%llu",
-                    ps->wl->params[i].key,
-                    wl_get_param_val(ps->wl, ps->wl->params[i].key));
+                    wl_param->key,
+                    wl_param_get_val(wl_param));
         }
     }
     fprintf(file, "\n");
