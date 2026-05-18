@@ -87,20 +87,21 @@ void run_report(batch_t *b)
 
 static void write_batch_metadata(FILE *file, batch_t *b)
 {
-    fprintf(file, "#workload=%s\n", b->wl->name);
-    fprintf(file, "#metric-group=%s\n", b->mg->name);
-    fprintf(file, "#warmup-runs=%llu\n", b->warmup_runs);
-    fprintf(file, "#batch-runs=%llu\n", b->batch_runs);
+    fprintf(file,
+            "# ./cyclops -w %s -m %s -u %llu -r %llu",
+            b->wl->name,
+            b->mg->name,
+            b->warmup_runs,
+            b->batch_runs);
 
-    workload_t *wl = b->wl;
-    if (!wl->params) {
-        return;
+    for (int i = 0; i < b->wl->n_params; i++) {
+        wl_param_t *wl_param = &b->wl->params[i];
+        fprintf(file,
+                " -p %s=%llu",
+                wl_param->key,
+                wl_param_get_val(wl_param));
     }
-
-    for (int i = 0; i < wl->n_params; i++) {
-        fprintf(file, "#workload-params.%s=", wl->params[i].key);
-        fprintf(file, "%llu\n", wl_get_param_val(wl, wl->params[i].key));
-    }
+    fprintf(file, "\n");
 }
 
 static void write_full_batch(FILE *file, batch_t *b)
