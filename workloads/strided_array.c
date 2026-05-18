@@ -27,8 +27,8 @@ static void init_indices()
 
 static void init(workload_t *wl)
 {
-    stride_bytes = wl_get_param(wl, "stride-bytes");
-    array_elements = wl_get_param(wl, "array-elements");
+    stride_bytes = wl_get_param_val(wl, "stride-bytes");
+    array_elements = wl_get_param_val(wl, "array-elements");
 
     init_indices();
 

@@ -23,9 +23,9 @@ static unsigned long long xorshift64()
 
 static void init(workload_t *wl)
 {
-    pattern_len = wl_get_param(wl, "pattern-len");
-    n_branches = wl_get_param(wl, "n-branches");
-    bias = wl_get_param(wl, "bias");
+    pattern_len = wl_get_param_val(wl, "pattern-len");
+    n_branches = wl_get_param_val(wl, "n-branches");
+    bias = wl_get_param_val(wl, "bias");
 
     /* sanitise input */
     if (pattern_len > n_branches) {

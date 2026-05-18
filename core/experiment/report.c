@@ -99,7 +99,7 @@ static void write_batch_metadata(FILE *file, batch_t *b)
 
     for (int i = 0; i < wl->n_params; i++) {
         fprintf(file, "#workload-params.%s=", wl->params[i].key);
-        fprintf(file, "%llu\n", wl_get_param(wl, wl->params[i].key));
+        fprintf(file, "%llu\n", wl_get_param_val(wl, wl->params[i].key));
     }
 }
 
@@ -173,7 +173,7 @@ static void ps_write_metadata(FILE *file, param_sweep_t *ps)
             fprintf(file,
                     " -p %s=%llu",
                     ps->wl->params[i].key,
-                    wl_get_param(ps->wl, ps->wl->params[i].key));
+                    wl_get_param_val(ps->wl, ps->wl->params[i].key));
         }
     }
     fprintf(file, "\n");
