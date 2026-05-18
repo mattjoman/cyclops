@@ -245,11 +245,11 @@ static void store_perf_results(batch_t *b,
         }
 
         double scaling = (double)pr->time_enabled / pr->time_running;
-        b->raw_data_scaling.run_vals[run] = scaling;
+        b->raw_metric_scaling.run_vals[run] = scaling;
 
         for (unsigned int pr_idx = 0; pr_idx < pr->nr; pr_idx++) {
             double value = scaling * pr->values[pr_idx].value;
-            b->raw_data[pr_idx].run_vals[run] = value;
+            b->raw_metrics[pr_idx].run_vals[run] = value;
         }
     }
 }
@@ -270,7 +270,7 @@ static void run_be(batch_t *b, void (*workload)(void))
     }
 
     for (int i = 0; i < b->n_raw; i++) {
-        int metric_id = b->raw_data[i].metric->id;
+        int metric_id = b->raw_metrics[i].metric->id;
         attrs[i] = create_perf_config(metric_id);
     }
 

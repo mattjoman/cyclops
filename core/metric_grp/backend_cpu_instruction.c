@@ -40,7 +40,7 @@ static void bench_rdtscp(batch_t *b, void (*workload)(void))
         start = rdtscp();
         workload();
         end = rdtscp();
-        b->raw_data[0].run_vals[i] = (double)(end - start);
+        b->raw_metrics[0].run_vals[i] = (double)(end - start);
     }
 }
 

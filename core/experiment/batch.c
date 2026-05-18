@@ -46,30 +46,30 @@ batch_t *batch_init(cyclops_cfg_t *cyclops_cfg)
 
     assert(b->n_raw > 0);
 
-    if (!(b->raw_data = calloc(b->n_raw, sizeof(metric_data_t)))) {
+    if (!(b->raw_metrics = calloc(b->n_raw, sizeof(batch_metric_t)))) {
         perror("Failed to allocate memory for perf counters");
         exit(1);
     }
 
     if (b->n_derived) {
-        if (!(b->derived_data = calloc(b->n_derived,
-                                          sizeof(metric_data_t)))) {
+        if (!(b->derived_metrics = calloc(b->n_derived,
+                                          sizeof(batch_metric_t)))) {
             perror("Failed to allocate memory for perf ratios");
             exit(1);
         }
     }
 
-    b->raw_data_scaling.run_vals = alloc_double_array(b->batch_runs);
+    b->raw_metric_scaling.run_vals = alloc_double_array(b->batch_runs);
 
     for (int i = 0; i < b->n_raw; i++) {
-        b->raw_data[i].run_vals = alloc_double_array(b->batch_runs);
-        b->raw_data[i].metric = mg_get_nth_metric_by_type(mg, i,
+        b->raw_metrics[i].run_vals = alloc_double_array(b->batch_runs);
+        b->raw_metrics[i].metric = mg_get_nth_metric_by_type(mg, i,
                                                             METRIC_TYPE_RAW);
     }
 
     for (int i = 0; i < b->n_derived; i++) {
-        b->derived_data[i].run_vals = alloc_double_array(b->batch_runs);
-        b->derived_data[i].metric = mg_get_nth_metric_by_type(mg, i,
+        b->derived_metrics[i].run_vals = alloc_double_array(b->batch_runs);
+        b->derived_metrics[i].metric = mg_get_nth_metric_by_type(mg, i,
                                                         METRIC_TYPE_DERIVED);
     }
 
@@ -79,39 +79,39 @@ batch_t *batch_init(cyclops_cfg_t *cyclops_cfg)
 void destroy_batch_data(batch_t *b)
 {
     for (int i = 0; i < b->n_raw; i++) {
-        free(b->raw_data[i].run_vals);
-        b->raw_data[i].run_vals = NULL;
+        free(b->raw_metrics[i].run_vals);
+        b->raw_metrics[i].run_vals = NULL;
     }
 
     for (int i = 0; i < b->n_derived; i++) {
-        free(b->derived_data[i].run_vals);
-        b->derived_data[i].run_vals = NULL;
+        free(b->derived_metrics[i].run_vals);
+        b->derived_metrics[i].run_vals = NULL;
     }
 
-    free(b->raw_data_scaling.run_vals);
-    b->raw_data_scaling.run_vals = NULL;
+    free(b->raw_metric_scaling.run_vals);
+    b->raw_metric_scaling.run_vals = NULL;
 
-    free(b->raw_data);
-    b->raw_data = NULL;
+    free(b->raw_metrics);
+    b->raw_metrics = NULL;
 
-    free(b->derived_data);
-    b->derived_data = NULL;
+    free(b->derived_metrics);
+    b->derived_metrics = NULL;
 
     free(b);
     b = NULL;
 }
 
-metric_data_t *batch_get_metric_data(batch_t *b,
-                                     metric_id_t metric_id)
+batch_metric_t *batch_get_batch_metric_by_id(batch_t *b,
+                                             metric_id_t metric_id)
 {
     for (int i = 0; i < b->n_raw; i++) {
-        if (b->raw_data[i].metric->id == metric_id) {
-            return &b->raw_data[i];
+        if (b->raw_metrics[i].metric->id == metric_id) {
+            return &b->raw_metrics[i];
         }
     }
     for (int i = 0; i < b->n_derived; i++) {
-        if (b->derived_data[i].metric->id == metric_id) {
-            return &b->derived_data[i];
+        if (b->derived_metrics[i].metric->id == metric_id) {
+            return &b->derived_metrics[i];
         }
     }
     return NULL;
@@ -119,28 +119,28 @@ metric_data_t *batch_get_metric_data(batch_t *b,
 
 static void batch_process_raw_metric_data(batch_t *b)
 {
-    b->raw_data_scaling.agg = aggregate_double(
-                b->raw_data_scaling.run_vals,
+    b->raw_metric_scaling.agg = aggregate_double(
+                b->raw_metric_scaling.run_vals,
                 b->batch_runs);
 
     for (int i = 0; i < b->n_raw; i++) {
-        b->raw_data[i].agg = aggregate_double(
-                b->raw_data[i].run_vals,
+        b->raw_metrics[i].agg = aggregate_double(
+                b->raw_metrics[i].run_vals,
                 b->batch_runs);
     }
 }
 
 static void batch_process_derived_metric_data(batch_t *b)
 {
-    metric_data_t *ratio, *numerator, *denominator;
+    batch_metric_t *ratio, *numerator, *denominator;
 
     for (int i = 0; i < b->n_derived; i++) {
 
-        ratio = &b->derived_data[i];
+        ratio = &b->derived_metrics[i];
         const metric_t *m = ratio->metric;
 
-        numerator = batch_get_metric_data(b, m->numerator);
-        denominator = batch_get_metric_data(b, m->denominator);
+        numerator = batch_get_batch_metric_by_id(b, m->numerator);
+        denominator = batch_get_batch_metric_by_id(b, m->denominator);
 
         assert(numerator != NULL);
         assert(denominator != NULL);

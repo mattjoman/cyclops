@@ -20,7 +20,7 @@ typedef struct {
     const metric_t *metric;
     double *run_vals;
     double_agg_t agg;
-} metric_data_t;
+} batch_metric_t;
 
 typedef struct batch {
     unsigned long long warmup_runs;
@@ -28,13 +28,13 @@ typedef struct batch {
     workload_t *wl;
     metric_grp_t *mg;
 
-    metric_data_t raw_data_scaling;
+    batch_metric_t raw_metric_scaling;
 
     int n_raw;
-    metric_data_t *raw_data;
+    batch_metric_t *raw_metrics;
 
     int n_derived;
-    metric_data_t *derived_data;
+    batch_metric_t *derived_metrics;
 
     bool to_csv;
 } batch_t;
