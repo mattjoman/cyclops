@@ -111,7 +111,7 @@ void ps_run(cyclops_cfg_t *cyclops_cfg)
 
     for (unsigned long long i = 0; i < ps->n_batches; i++) {
 
-        batch_t *batch_data = batch_init(cyclops_cfg);
+        batch_t *b = batch_init(cyclops_cfg);
 
         /* 
          * must set param to current sweep value after calling
@@ -121,19 +121,18 @@ void ps_run(cyclops_cfg_t *cyclops_cfg)
         snprintf(param_val_buf, sizeof(param_val_buf), "%llu", param_val);
         wl_set_param(ps->wl, ps->wl_param_key, param_val_buf);
 
-        batch_param_sweep_run(batch_data, i);
+        batch_param_sweep_run(b, i);
 
         /* extract aggregate batch data for each metric */
         for (int m = 0; m < ps->mg->n_metrics; m++) {
-            batch_metric_t *batch_metric = batch_get_batch_metric_by_id(
-                                                    batch_data,
+            batch_metric_t *batch_metric = batch_get_batch_metric_by_id(b,
                                                     ps->metrics[m].metric->id);
             assert(batch_metric);
             ps->metrics[m].batch_vals[i].agg = batch_metric->agg;
             ps->metrics[m].batch_vals[i].param_sweep_val = param_val;
         }
 
-        batch_destroy(batch_data);
+        batch_destroy(b);
     }
 
     /* write to csv */
