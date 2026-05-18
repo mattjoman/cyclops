@@ -117,7 +117,7 @@ batch_metric_t *batch_get_batch_metric_by_id(batch_t *b,
     return NULL;
 }
 
-static void batch_process_raw_metric_data(batch_t *b)
+static void batch_aggregate_raw_metrics(batch_t *b)
 {
     b->raw_metric_scaling.agg = aggregate_double(
                 b->raw_metric_scaling.run_vals,
@@ -162,7 +162,7 @@ static void batch_run(batch_t *b, unsigned long long batch_no)
     backend->bench_func(b, b->wl->workload);
     b->wl->clean();
 
-    batch_process_raw_metric_data(b);
+    batch_aggregate_raw_metrics(b);
     batch_process_derived_metric_data(b);
 
     if (b->to_csv) {
