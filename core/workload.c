@@ -37,6 +37,14 @@ workload_t *wl_get_by_name(const char *name)
     return NULL;
 }
 
+unsigned long long wl_param_get_val(wl_param_t *wl_param)
+{
+    if (wl_param->arg) {
+        return strtoull(wl_param->arg, NULL, 10);
+    }
+    return strtoull(wl_param->default_value, NULL, 10);
+}
+
 /*
  * Returns the workload parameter value given a parameter key.
  *
@@ -46,11 +54,10 @@ workload_t *wl_get_by_name(const char *name)
 unsigned long long wl_get_param_val(workload_t *wl, const char *key)
 {
     for (int i = 0; i < wl->n_params; i++) {
-        if (strcmp(wl->params[i].key, key) == 0) {
-            if (wl->params[i].arg) {
-                return strtoull(wl->params[i].arg, NULL, 10);
-            }
-            return strtoull(wl->params[i].default_value, NULL, 10);
+        wl_param_t *wl_param = &wl->params[i];
+
+        if (strcmp(wl_param->key, key) == 0) {
+            return wl_param_get_val(wl_param);
         };
     }
 
