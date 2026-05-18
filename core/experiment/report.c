@@ -179,7 +179,7 @@ static void ps_write_metadata(FILE *file, param_sweep_t *ps)
     fprintf(file, "\n");
 }
 
-void param_sweep_to_csv(param_sweep_t *ps)
+void ps_to_csv(param_sweep_t *ps)
 {
     FILE *file = fopen("param_sweep.csv", "w");
     if (!file) {

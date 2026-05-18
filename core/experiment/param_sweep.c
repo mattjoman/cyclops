@@ -26,7 +26,7 @@ static unsigned long long ps_n_batches(param_sweep_t *ps)
     return (diff / step) + 1;
 }
 
-static param_sweep_t *param_sweep_init(cyclops_cfg_t *cyclops_cfg)
+static param_sweep_t *ps_init(cyclops_cfg_t *cyclops_cfg)
 {
     param_sweep_t *ps = NULL;
     if (!(ps = calloc(1, sizeof(param_sweep_t)))) {
@@ -74,7 +74,7 @@ static param_sweep_t *param_sweep_init(cyclops_cfg_t *cyclops_cfg)
     return ps;
 }
 
-static void param_sweep_destroy(param_sweep_t *ps)
+static void ps_destroy(param_sweep_t *ps)
 {
     for (int i = 0; i < ps->mg->n_metrics; i++) {
         free(ps->metrics[i].batch_vals);
@@ -102,9 +102,9 @@ static unsigned long long ps_get_nth_param_val(param_sweep_t *ps,
     return low + (n * step);
 }
 
-void param_sweep_run(cyclops_cfg_t *cyclops_cfg)
+void ps_run(cyclops_cfg_t *cyclops_cfg)
 {
-    param_sweep_t *ps = param_sweep_init(cyclops_cfg);
+    param_sweep_t *ps = ps_init(cyclops_cfg);
 
     static char param_val_buf[64];
     unsigned long long param_val;
@@ -137,8 +137,8 @@ void param_sweep_run(cyclops_cfg_t *cyclops_cfg)
     }
 
     /* write to csv */
-    param_sweep_to_csv(ps);
+    ps_to_csv(ps);
 
     /* clean up */
-    param_sweep_destroy(ps);
+    ps_destroy(ps);
 }

@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     }
 
     if (cli_cfg->ps_wl_param_key) {
-        param_sweep_run(cli_cfg);
+        ps_run(cli_cfg);
     } else {
         batch_single_run(cli_cfg);
     }

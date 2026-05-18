@@ -72,6 +72,6 @@ typedef struct {
     bool to_csv;
 } param_sweep_t;
 
-void param_sweep_run(cyclops_cfg_t *cyclops_cfg);
+void ps_run(cyclops_cfg_t *cyclops_cfg);
 
 #endif

@@ -36,6 +36,6 @@ batch_metric_t *batch_get_batch_metric_by_id(batch_t *data,
 
 void run_report(batch_t *batch_data);
 void batch_to_csv(batch_t *batch_data, unsigned long long batch_no);
-void param_sweep_to_csv(param_sweep_t *ps);
+void ps_to_csv(param_sweep_t *ps);
 
 #endif
