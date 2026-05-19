@@ -105,16 +105,24 @@ void batch_destroy(batch_t *b)
 batch_metric_t *batch_get_batch_metric_by_id(batch_t *b,
                                              metric_id_t metric_id)
 {
+    batch_metric_t *batch_metric;
+
     for (int i = 0; i < b->n_raw; i++) {
-        if (b->raw_metrics[i].metric->id == metric_id) {
-            return &b->raw_metrics[i];
+        batch_metric = &b->raw_metrics[i];
+
+        if (batch_metric->metric->id == metric_id) {
+            return batch_metric;
         }
     }
+
     for (int i = 0; i < b->n_derived; i++) {
-        if (b->derived_metrics[i].metric->id == metric_id) {
-            return &b->derived_metrics[i];
+        batch_metric = &b->derived_metrics[i];
+
+        if (batch_metric->metric->id == metric_id) {
+            return batch_metric;;
         }
     }
+
     return NULL;
 }
 
