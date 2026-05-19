@@ -115,6 +115,7 @@ static void ps_set_batch_vals(param_sweep_t *ps, batch_t *b,
         batch_metric = batch_get_batch_metric_by_id(b,ps_metric->metric->id);
 
         assert(batch_metric);
+        assert(batch_num < ps->n_batches);
 
         ps_metric->batch_vals[batch_num].agg = batch_metric->agg;
         ps_metric->batch_vals[batch_num].param_sweep_val = param_val;
