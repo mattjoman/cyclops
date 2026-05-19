@@ -63,12 +63,14 @@ batch_t *batch_init(cyclops_cfg_t *cyclops_cfg)
     b->raw_metric_scaling.run_vals = alloc_double_array(b->batch_runs);
 
     for (int i = 0; i < b->n_raw; i++) {
+        b->raw_metrics[i].batch_runs = b->batch_runs;
         b->raw_metrics[i].run_vals = alloc_double_array(b->batch_runs);
         b->raw_metrics[i].metric = mg_get_nth_metric_by_type(mg, i,
                                                             METRIC_TYPE_RAW);
     }
 
     for (int i = 0; i < b->n_derived; i++) {
+        b->derived_metrics[i].batch_runs = b->batch_runs;
         b->derived_metrics[i].run_vals = alloc_double_array(b->batch_runs);
         b->derived_metrics[i].metric = mg_get_nth_metric_by_type(mg, i,
                                                         METRIC_TYPE_DERIVED);
@@ -106,6 +108,11 @@ void batch_metric_set_run_val(batch_metric_t *batch_metric,
                               unsigned long long run,
                               double val)
 {
+    /* Guard to prevent buffer overflows */
+    if (run >= batch_metric->batch_runs) {
+        return; // TODO: we should be propagating errors here
+    }
+
     batch_metric->run_vals[run] = val;
 }
 

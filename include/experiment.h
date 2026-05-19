@@ -18,6 +18,7 @@ typedef struct metric_grp metric_grp_t;
 
 typedef struct {
     const metric_t *metric;
+    unsigned long long batch_runs;
     double *run_vals;
     double_agg_t agg;
 } batch_metric_t;

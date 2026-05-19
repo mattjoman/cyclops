@@ -68,7 +68,7 @@ int main()
 
     // try to set a run val for an invalid run number
     bm = batch_get_batch_metric_by_id(b, METRIC_INSTRUCTIONS);
-    //batch_metric_set_run_val(bm, b->batch_runs, 42.0);
+    batch_metric_set_run_val(bm, b->batch_runs, 42.0);
 
     /* cleanup */
 
