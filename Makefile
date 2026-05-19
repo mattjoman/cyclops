@@ -40,12 +40,11 @@ CORE_SRCS = \
 	core/experiment/param_sweep.c \
 	core/experiment/report.c \
 	core/experiment/data_processing.c \
-	core/workload.c
-
-WORKLOAD_SRCS := $(wildcard workloads/*.c)
+	core/workload.c \
+	$(wildcard workloads/*.c)
 
 # Main application sources
-APP_SRCS = core/main.c $(CORE_SRCS) $(WORKLOAD_SRCS)
+APP_SRCS = core/main.c $(CORE_SRCS)
 
 # Object files
 CORE_OBJS = $(CORE_SRCS:.c=.o)
