@@ -257,6 +257,7 @@ const metric_t metrics[N_METRICS] = {
 
 static metric_grp_registry mg_registry = {
     .n_registered = 0,
+    .registry = NULL,
 };
 
 void register_metric_grp(metric_grp_t *mg)

@@ -4,20 +4,31 @@
 #include "../../include/metric_grp.h"
 #include "./backend.h"
 
-static metric_backend_t **backends = NULL;
-static size_t n_backends = 0;
+static metric_backend_registry_t metric_be_registry = {
+    .n_registered = 0,
+    .registry = NULL,
+};
 
-void register_backend(metric_backend_t *be)
+void metric_be_register(metric_backend_t *be)
 {
-    backends = realloc(backends, (n_backends + 1) * sizeof(*backends));
-    backends[n_backends++] = be;
+    metric_be_registry.registry = realloc(metric_be_registry.registry,
+                                          (metric_be_registry.n_registered + 1)
+                                          * sizeof(metric_backend_t *));
+    metric_be_registry.registry[metric_be_registry.n_registered++] = be;
+}
+
+metric_backend_registry_t *metric_be_registry_get_registry(void)
+{
+    return &metric_be_registry;
 }
 
 metric_backend_t *metric_backend_get(metric_backend_id_t id)
 {
-    for (size_t i = 0; i < n_backends; i++) {
-        if (backends[i]->id == id) {
-            return backends[i];
+    for (size_t i = 0; i < metric_be_registry.n_registered; i++) {
+        metric_backend_t *metric_be = metric_be_registry.registry[i];
+
+        if (metric_be->id == id) {
+            return metric_be;
         }
     }
     return NULL;
