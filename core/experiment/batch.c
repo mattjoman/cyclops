@@ -128,14 +128,16 @@ batch_metric_t *batch_get_batch_metric_by_id(batch_t *b,
 
 static void batch_aggregate_raw_metrics(batch_t *b)
 {
-    b->raw_metric_scaling.agg = aggregate_double(
-                b->raw_metric_scaling.run_vals,
-                b->batch_runs);
+    batch_metric_t *batch_metric = &b->raw_metric_scaling;
+
+    batch_metric->agg = aggregate_double(batch_metric->run_vals,
+                                         b->batch_runs);
 
     for (int i = 0; i < b->n_raw; i++) {
-        b->raw_metrics[i].agg = aggregate_double(
-                b->raw_metrics[i].run_vals,
-                b->batch_runs);
+        batch_metric = &b->raw_metrics[i];
+
+        batch_metric->agg = aggregate_double(batch_metric->run_vals,
+                                             b->batch_runs);
     }
 }
 
