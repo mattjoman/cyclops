@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <assert.h>
 
 #include "../include/registry.h"
 
@@ -22,6 +23,8 @@ static registry_t registries[N_REGISTRIES] = {
 
 registry_t *registry_get_reg_by_id(registry_id_t id)
 {
+    assert(id < N_REGISTRIES);
+
     return &registries[id];
 }
 
