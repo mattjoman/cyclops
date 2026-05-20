@@ -156,7 +156,15 @@ static struct perf_event_attr create_perf_config(int metric)
     //    pea.pinned = 1;
     pea.exclude_kernel = 1;
     pea.exclude_hv = 1;
+#if defined(__aarch64__) || defined(__arm__)
+    /* 
+     * exclude_idle doesn't seem to be supported on ARM
+     * (tested on Cortex-A72 (ARM v8) / Raspberry Pi OS with 6.12 kernel)
+     */
+    pea.exclude_idle = 0;
+#else
     pea.exclude_idle = 1;
+#endif
     pea.read_format = PERF_FORMAT_GROUP |
         PERF_FORMAT_ID |
         PERF_FORMAT_TOTAL_TIME_ENABLED |
