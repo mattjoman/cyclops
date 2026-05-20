@@ -33,7 +33,7 @@ make
   `perf_event_open()` and TSC data with `rdtscp`)
 - Sensible setup by default to improve accuracy and reproducibility (e.g.
   pinning the thread and excluding the kernel from PMU data)
-- Metric groups can include derived metrics like instructions per cycls (IPC)
+- Metric groups can include derived metrics like instructions per cycles (IPC)
 
 ### Run Experiments with One Command
 
