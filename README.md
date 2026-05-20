@@ -1,7 +1,7 @@
 # Cyclops README
 
-**Cyclops** is a tool for investigating and reverse-engineering CPU
-architecture and behaviour.
+**Cyclops** is a highly scriptable and extensible framework for
+reverse-engineering CPU architecture.
 
 ## Build and Run
 
@@ -78,9 +78,6 @@ make
 ```
 
 ## Experiments
-
-The `cyclops` tool is designed to be highly scriptable, and make it easy to
-design performance & microarchitecture experiments.
 
 In `experiments/` there are example Python scripts for running experiments.
 To run these experiments, you will first need to build the `cyclops` binary
