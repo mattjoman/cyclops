@@ -16,8 +16,8 @@ class Cyclops:
     batch_runs: int = 5
     params: dict = field(default_factory=dict)
     param_sweep: ParamSweep | None = None
-    batch_csv: bool = False
-    param_sweep_csv: bool = True
+    csv: bool = True
+    csv_all: bool = False
 
     def exec(self):
         arg_list = [
@@ -41,11 +41,11 @@ class Cyclops:
                 f"{self.param_sweep.step}"
             )
 
-        if self.param_sweep_csv:
-            arg_list.append("--param-sweep-csv")
+        if self.csv:
+            arg_list.append("--csv")
 
-        if self.batch_csv:
-            arg_list.append("--batch-csv")
+        if self.csv_all:
+            arg_list.append("--csv-all")
 
         result = subprocess.run(arg_list)
         print(result.stdout)

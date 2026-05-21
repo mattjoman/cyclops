@@ -10,31 +10,31 @@ WARMUP_RUNS = 5
 #AGGREGATE = "MAX"
 AGGREGATE = "MEDIAN"
 
-WORKLOAD = "STRIDED_ARRAY"
+WORKLOAD = "STRIDED_ARRAY_2"
 
 L1D = 0
 LLC = 1
 
-def sweep_array_elements(cache: int):
+def sweep_array_size_kib(cache: int):
 
     if cache == L1D:
-        array_elements_low = 100
-        array_elements_high = 1000
-        array_elements_step = 10
+        array_size_kib_low = 1
+        array_size_kib_high = 100
+        array_size_kib_step = 1
         metric_grp = "L1D_READS"
         metric = "L1D_READ_MISS_RATE"
     elif cache == LLC:
-        array_elements_low = 1000
-        array_elements_high = 10000
-        array_elements_step = 1000
+        array_size_kib_low = 500
+        array_size_kib_high = 30000
+        array_size_kib_step = 500
         metric_grp = "LLC_READS"
         metric = "LLC_READ_MISS_RATE"
 
     param_sweep = ParamSweep(
-        key="array-elements",
-        low=array_elements_low,
-        high=array_elements_high,
-        step=array_elements_step,
+        key="array-size-kib",
+        low=array_size_kib_low,
+        high=array_size_kib_high,
+        step=array_size_kib_step,
     )
 
     cyclops = Cyclops(
@@ -52,19 +52,19 @@ def sweep_array_elements(cache: int):
         index_col=param_sweep.key
     )
 
-    return 64 * df.index.values, df[f"{metric}:{AGGREGATE}"].values
+    return df.index.values, df[f"{metric}:{AGGREGATE}"].values
 
 if __name__ == "__main__":
 
-    x_L1D, y_L1D = sweep_array_elements(L1D)
-    x_LLC, y_LLC = sweep_array_elements(LLC)
+    x_L1D, y_L1D = sweep_array_size_kib(L1D)
+    x_LLC, y_LLC = sweep_array_size_kib(LLC)
 
     plt.figure()
     plt.plot(x_L1D, y_L1D, marker="", label="L1D")
     plt.plot(x_LLC, y_LLC, marker="", label="LLC")
     plt.xscale("log")
     #plt.yscale("log")
-    plt.xlabel("Array size (Bytes)")
+    plt.xlabel("Array size (KiB)")
     plt.ylabel("Cache miss rate")
     plt.title("Cache Miss Rate vs Array Size")
     plt.grid(True)
