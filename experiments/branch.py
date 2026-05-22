@@ -3,8 +3,8 @@ import pandas as pd
 
 from cyclops import Cyclops, ParamSweep
 
-BATCH_RUNS = 1
-WARMUP_RUNS = 0
+BATCH_RUNS = 3
+WARMUP_RUNS = 1
 
 #AGGREGATE = "MIN"
 #AGGREGATE = "MAX"
@@ -13,16 +13,18 @@ AGGREGATE = "MEDIAN"
 WORKLOAD = "BRANCH"
 
 METRIC_GRP = "BRANCH"
-METRIC = "BRANCH_MISPRED_RATE"
+METRIC = "BRANCH_MISPREDICTIONS"
 #METRIC_GRP = "BPU_READS"
 #METRIC = "BPU_READ_MISS_RATE"
+
+N_BRANCHES = 100000
 
 def sweep_pattern_len(bias: int):
 
     param_sweep = ParamSweep(
         key="pattern-len",
         low=100,
-        high=10000,
+        high=100000,
         step=100,
     )
 
@@ -32,10 +34,11 @@ def sweep_pattern_len(bias: int):
         warmup_runs=WARMUP_RUNS,
         batch_runs=BATCH_RUNS,
         params={
-            "n-branches": 100000,
+            "n-branches": N_BRANCHES,
             "bias": bias,
         },
         param_sweep=param_sweep,
+        #csv_all=True,
     )
     cyclops.exec()
 
@@ -45,7 +48,7 @@ def sweep_pattern_len(bias: int):
         index_col=param_sweep.key
     )
 
-    return df.index.values, df[f"{METRIC}:{AGGREGATE}"].values
+    return df.index.values, (df[f"{METRIC}:{AGGREGATE}"].values / N_BRANCHES)
 
 def run_bias_experiment(bias_take: bool):
 
@@ -74,7 +77,7 @@ def run_bias_experiment(bias_take: bool):
     plt.ylabel(METRIC)
     plt.title(figure_title)
     plt.grid(True)
-    plt.ylim(0, 0.3)
+    plt.ylim(0, 1)
     plt.legend(loc='center right', bbox_to_anchor=(1, 0.5))
     plt.savefig(file_name)
     plt.close()
