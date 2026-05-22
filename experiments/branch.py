@@ -73,8 +73,8 @@ def run_bias_experiment(bias_take: bool):
 
     #plt.xscale("log")
     #plt.yscale("log")
-    plt.xlabel("Pattern Lenth")
-    plt.ylabel(METRIC)
+    plt.xlabel("Pattern Length")
+    plt.ylabel("Misprediction Rate")
     plt.title(figure_title)
     plt.grid(True)
     plt.ylim(0, 1)
