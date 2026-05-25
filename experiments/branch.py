@@ -50,16 +50,7 @@ def sweep_pattern_len(bias: int):
 
     return df.index.values, (df[f"{METRIC}:{AGGREGATE}"].values / N_BRANCHES)
 
-def run_bias_experiment(bias_take: bool):
-
-    if bias_take:
-        biases = [50, 60, 70, 80, 90, 95, 99]
-        file_name = "branch_bias_take.png"
-        figure_title = "Misprediction Rate (bias: take branch)"
-    else:
-        biases = [50, 40, 30, 20, 10, 5, 1]
-        file_name = "branch_bias_dont_take.png"
-        figure_title = "Misprediction Rate (bias: don't take branch)"
+def run_experiment(biases: list[int], file_name: str, figure_title: str):
 
     data = []
     for bias in biases:
@@ -83,5 +74,21 @@ def run_bias_experiment(bias_take: bool):
     plt.close()
 
 if __name__ == "__main__":
-    run_bias_experiment(True)
-    run_bias_experiment(False)
+
+    run_experiment(
+        biases=[50, 60, 70, 80, 90, 95, 99],
+        file_name = "branch_bias_take.png",
+        figure_title = "Misprediction Rate (bias: take branch)",
+    )
+
+    run_experiment(
+        biases=[50, 40, 30, 20, 10, 5, 1],
+        file_name="branch_bias_dont_take.png",
+        figure_title="Misprediction Rate (bias: don't take branch)",
+    )
+
+    run_experiment(
+        biases=[50],
+        file_name="branch_unbiased.png",
+        figure_title="Misprediction Rate (unbiased)",
+    )
