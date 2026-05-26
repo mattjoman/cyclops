@@ -17,15 +17,15 @@ METRIC = "BRANCH_MISPREDICTIONS"
 #METRIC_GRP = "BPU_READS"
 #METRIC = "BPU_READ_MISS_RATE"
 
-N_BRANCHES = 100000
+N_BRANCHES = 250000
 
 def sweep_pattern_len(bias: int):
 
     param_sweep = ParamSweep(
         key="pattern-len",
-        low=100,
-        high=100000,
-        step=100,
+        low=1000,
+        high=250000,
+        step=1000,
     )
 
     cyclops = Cyclops(
@@ -69,7 +69,7 @@ def run_experiment(biases: list[int], file_name: str, figure_title: str):
     plt.title(figure_title)
     plt.grid(True)
     plt.ylim(0, 1)
-    plt.legend(loc='center right', bbox_to_anchor=(1, 0.5))
+    plt.legend(loc='lower right', bbox_to_anchor=(1, 0.5))
     plt.savefig(file_name)
     plt.close()
 
@@ -78,17 +78,17 @@ if __name__ == "__main__":
     run_experiment(
         biases=[50, 60, 70, 80, 90, 95, 99],
         file_name = "branch_bias_take.png",
-        figure_title = "Misprediction Rate (bias: take branch)",
+        figure_title = "Bias: T",
     )
 
     run_experiment(
         biases=[50, 40, 30, 20, 10, 5, 1],
         file_name="branch_bias_dont_take.png",
-        figure_title="Misprediction Rate (bias: don't take branch)",
+        figure_title="Bias: NT",
     )
 
     run_experiment(
         biases=[50],
         file_name="branch_unbiased.png",
-        figure_title="Misprediction Rate (unbiased)",
+        figure_title="Unbiased",
     )
