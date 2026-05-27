@@ -3,9 +3,9 @@
 
 #include "../include/workload.h"
 
-unsigned long long pattern_len;
-unsigned long long n_branches;
-unsigned long long bias;
+static unsigned long long pattern_len;
+static unsigned long long n_branches;
+static unsigned long long bias;
 
 static char *array;
 
