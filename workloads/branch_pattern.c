@@ -87,7 +87,7 @@ static wl_param_t params[] = {
 };
 
 static workload_t wl = {
-    .name = "BRANCH",
+    .name = "BRANCH_PATTERN",
 
     .n_params = 3,
     .params = params,

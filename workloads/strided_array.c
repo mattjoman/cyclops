@@ -2,8 +2,10 @@
 
 #include "../include/workload.h"
 
-unsigned long long stride_bytes;
-unsigned long long array_elements;
+#define STRIDE_BYTES 64 // one element per cache line
+
+static unsigned long long array_elements;
+static unsigned long long array_size_kib;
 
 static int *array;
 static unsigned long long *indices;
@@ -27,14 +29,14 @@ static void init_indices()
 
 static void init(workload_t *wl)
 {
-    stride_bytes = wl_get_param_val(wl, "stride-bytes");
-    array_elements = wl_get_param_val(wl, "array-elements");
+    array_size_kib = wl_get_param_val(wl, "array-size-kib");
+    array_elements = (array_size_kib << 10) / STRIDE_BYTES;
 
     init_indices();
 
-    array = (int *)aligned_alloc(stride_bytes, stride_bytes * array_elements);
+    array = (int *)aligned_alloc(STRIDE_BYTES, STRIDE_BYTES * array_elements);
     for (unsigned long long i = 0; i < array_elements; i++) {
-        array[i * (stride_bytes / sizeof(int))] = i;
+        array[i * (STRIDE_BYTES / sizeof(int))] = i;
     }
 }
 
@@ -48,24 +50,21 @@ __attribute__((noinline)) static void workload(void)
 {
     volatile unsigned long long sum = 0;
     for (unsigned long long i = 0; i < array_elements; i++) {
-        sum += array[indices[i] * (stride_bytes / sizeof(int))];
+        sum += array[indices[i] * (STRIDE_BYTES / sizeof(int))];
     }
 }
 
 static wl_param_t params[] = {
     {
-        .key = "stride-bytes",
-        .default_value = "64", // 1 element per cache line
-    }, {
-        .key = "array-elements",
-        .default_value = "1000000",
+        .key = "array-size-kib",
+        .default_value = "1", // 1 element per cache line
     },
 };
 
 static workload_t wl = {
     .name = "STRIDED_ARRAY",
 
-    .n_params = 2,
+    .n_params = 1,
     .params = params,
 
     .init = init,

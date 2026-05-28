@@ -10,7 +10,7 @@ WARMUP_RUNS = 5
 #AGGREGATE = "MAX"
 AGGREGATE = "MEDIAN"
 
-WORKLOAD = "STRIDED_ARRAY_2"
+WORKLOAD = "STRIDED_ARRAY"
 
 L1D = 0
 LLC = 1
@@ -57,11 +57,11 @@ def sweep_array_size_kib(cache: int):
 if __name__ == "__main__":
 
     x_L1D, y_L1D = sweep_array_size_kib(L1D)
-    x_LLC, y_LLC = sweep_array_size_kib(LLC)
+    #x_LLC, y_LLC = sweep_array_size_kib(LLC)
 
     plt.figure()
     plt.plot(x_L1D, y_L1D, marker="", label="L1D")
-    plt.plot(x_LLC, y_LLC, marker="", label="LLC")
+    #plt.plot(x_LLC, y_LLC, marker="", label="LLC")
     plt.xscale("log")
     #plt.yscale("log")
     plt.xlabel("Array size (KiB)")
