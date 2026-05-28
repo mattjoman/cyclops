@@ -29,8 +29,8 @@ make
 
 ### Metric Groups
 
-- Record groups of metrics while the workload runs (e.g. PMU data with
-  `perf_event_open()` and TSC data with `rdtscp`)
+- Record groups of metrics while the workload runs (e.g. PMU data via the Linux
+  perf subsystem, and ISA-specific metrics like `rdtscp`)
 - Sensible setup by default to improve accuracy and reproducibility (e.g.
   pinning the thread and excluding the kernel from PMU data)
 - Metric groups can include derived metrics like instructions per cycles (IPC)
