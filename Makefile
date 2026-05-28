@@ -19,7 +19,7 @@ CORE_SRCS = \
 	core/cli.c \
 	core/registry.c \
 	core/metric.c \
-	core/metric_grp/frontend.c \
+	core/metric_grp/metric_grp.c \
 	core/metric_grp/backend.c \
 	core/metric_grp/backend_common.c \
 	core/metric_grp/backend_perf.c \
