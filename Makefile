@@ -23,7 +23,7 @@ CORE_SRCS = \
 	core/metric_grp/backend.c \
 	core/metric_grp/backend_common.c \
 	core/metric_grp/backend_perf.c \
-	core/metric_grp/backend_cpu_instruction.c \
+	core/metric_grp/backend_isa.c \
 	core/metric_grp/metric_grps/alignment_faults.c \
 	core/metric_grp/metric_grps/arm_timer.c \
 	core/metric_grp/metric_grps/bpu_reads.c \

@@ -158,13 +158,13 @@ const metric_t metrics[N_METRICS] = {
         .id = METRIC_RDTSCP,
         .name = "RDTSCP",
         .type = METRIC_TYPE_RAW,
-        .backend = METRIC_BE_CPU_INSTRUCTION,
+        .backend = METRIC_BE_ISA,
     },
     [METRIC_ARM] = {
         .id = METRIC_ARM,
         .name = "ARM",
         .type = METRIC_TYPE_RAW,
-        .backend = METRIC_BE_CPU_INSTRUCTION,
+        .backend = METRIC_BE_ISA,
     },
 
     /* DERIVED METRICS */

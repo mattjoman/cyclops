@@ -77,7 +77,7 @@ void run_be(batch_t *b, void (*workload)(void))
 }
 
 static metric_backend_t be = {
-    .id = METRIC_BE_CPU_INSTRUCTION,
+    .id = METRIC_BE_ISA,
     .bench_func = run_be,
 };
 
