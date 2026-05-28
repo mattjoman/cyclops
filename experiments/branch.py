@@ -75,6 +75,7 @@ def run_experiment(biases: list[int], file_name: str, figure_title: str):
 
 if __name__ == "__main__":
 
+    """
     run_experiment(
         biases=[50, 60, 70, 80, 90, 95, 99],
         file_name = "branch_bias_take.png",
@@ -86,6 +87,7 @@ if __name__ == "__main__":
         file_name="branch_bias_dont_take.png",
         figure_title="Bias: NT",
     )
+    """
 
     run_experiment(
         biases=[50],
