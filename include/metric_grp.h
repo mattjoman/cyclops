@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 #include "./cyclops.h"
+#include "./metric.h"
 #include "./registry.h"
 #include "./experiment.h"
 
@@ -22,7 +23,6 @@ typedef struct metric_grp {
         registry_register_object((void *)mg_ptr, REG_ID_METRIC_GRP); \
     }
 
-const metric_t *metric_get_by_id(metric_id_t id);
 const metric_t *mg_get_nth_metric_by_type(metric_grp_t *mg,
                                           int n,
                                           metric_type_t type);
